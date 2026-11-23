@@ -1,0 +1,27 @@
+<?php
+
+namespace Modules\Community\Filament\Resources\GalleryItemResource\Pages;
+
+use Filament\Actions;
+use Filament\Resources\Pages\EditRecord;
+use Modules\Community\Filament\Resources\GalleryItemResource;
+
+class EditGalleryItem extends EditRecord
+{
+    protected static string $resource = GalleryItemResource::class;
+
+    public function getTitle(): string
+    {
+        return 'Modifier le média';
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        return GalleryItemResource::enforceConsent($data);
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [Actions\DeleteAction::make()];
+    }
+}

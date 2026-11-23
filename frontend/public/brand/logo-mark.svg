@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="markTitle">
+  <title id="markTitle">Sceau de Jiloul Jadid</title>
+  <circle cx="80" cy="80" r="78" fill="#C6A04A"/>
+  <circle cx="80" cy="80" r="74" fill="#0B1E44"/>
+  <circle cx="80" cy="80" r="67" fill="none" stroke="#C6A04A" stroke-width="0.75"/>
+  <g fill="#C6A04A" transform="translate(80 27)">
+    <rect x="-5.5" y="-5.5" width="11" height="11"/>
+    <rect x="-5.5" y="-5.5" width="11" height="11" transform="rotate(45)"/>
+  </g>
+  <path d="M47 78 Q80 14 113 78" fill="none" stroke="#C6A04A" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M80 92 L39 82 L45 120 L80 110 Z" fill="#F4EFE3" stroke="#C6A04A" stroke-width="1" stroke-linejoin="round"/>
+  <path d="M80 92 L121 82 L115 120 L80 110 Z" fill="#E4D5B4" stroke="#C6A04A" stroke-width="1" stroke-linejoin="round"/>
+  <path d="M80 92 V112" stroke="#C6A04A" stroke-width="1"/>
+  <path d="M52 96 H70 M53 102 H70 M54 108 H70" stroke="#C6A04A" stroke-width="0.8" stroke-linecap="round"/>
+  <path d="M90 96 H108 M90 102 H107 M90 108 H106" stroke="#0B1E44" stroke-width="0.8" stroke-linecap="round" opacity="0.45"/>
+  <path d="M62 132 H98" stroke="#C6A04A" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

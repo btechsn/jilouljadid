@@ -1,0 +1,4 @@
+# Fichier volontairement vide.
+# En local, utiliser : docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+# En production VPS : docker compose up -d --build
+services: {}

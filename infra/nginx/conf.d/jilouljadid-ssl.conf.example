@@ -1,0 +1,33 @@
+# Renommer en jilouljadid-ssl.conf après obtention des certificats Let's Encrypt
+# et s'assurer que docker-compose monte /etc/letsencrypt en lecture seule.
+
+server {
+    listen 443 ssl http2;
+    server_name jilouljadid.com www.jilouljadid.com;
+
+    ssl_certificate     /etc/letsencrypt/live/jilouljadid.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/jilouljadid.com/privkey.pem;
+    ssl_protocols       TLSv1.2 TLSv1.3;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
+
+    client_max_body_size 100M;
+
+    # Réutiliser les mêmes locations que jilouljadid.conf
+    # (ou include un fichier locations commun)
+    # Pour démarrer vite : après SSL, remplace le listen 80 du conf principal
+    # par une redirection :
+
+    location / {
+        proxy_pass http://next_frontend;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+    }
+}
+
+# Redirection HTTP → HTTPS (à ajouter dans le server :80 une fois SSL OK)
+# return 301 https://jilouljadid.com$request_uri;

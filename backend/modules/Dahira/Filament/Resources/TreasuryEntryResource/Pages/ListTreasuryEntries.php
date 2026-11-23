@@ -1,0 +1,22 @@
+<?php
+
+namespace Modules\Dahira\Filament\Resources\TreasuryEntryResource\Pages;
+
+use Filament\Actions;
+use Filament\Resources\Pages\ListRecords;
+use Modules\Dahira\Filament\Resources\TreasuryEntryResource;
+
+class ListTreasuryEntries extends ListRecords
+{
+    protected static string $resource = TreasuryEntryResource::class;
+
+    public function getTitle(): string
+    {
+        return 'Trésorerie';
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [Actions\CreateAction::make()];
+    }
+}

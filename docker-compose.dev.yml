@@ -1,0 +1,16 @@
+# Développement local (optionnel)
+# docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+services:
+  nginx:
+    ports:
+      - "8081:80"
+
+  app:
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+
+  db:
+    ports:
+      - "5434:5432"

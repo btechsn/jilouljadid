@@ -1,0 +1,54 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Modules\Core\Support;
+
+final class PhoneNumber
+{
+    public static function e164(?string $raw): ?string
+    {
+        if ($raw === null || trim($raw) === '') {
+            return null;
+        }
+
+        $digits = preg_replace('/\D+/', '', $raw) ?? '';
+        if (str_starts_with($digits, '00221')) {
+            $digits = substr($digits, 2);
+        }
+
+        if (str_starts_with($digits, '221') && strlen($digits) === 12) {
+            return '+' . $digits;
+        }
+
+        if (str_starts_with($digits, '0') && strlen($digits) === 10) {
+            $digits = substr($digits, 1);
+        }
+
+        if (strlen($digits) === 9 && str_starts_with($digits, '7')) {
+            return '+221' . $digits;
+        }
+
+        if (str_starts_with(trim($raw), '+') && strlen($digits) >= 8 && strlen($digits) <= 15) {
+            return '+' . $digits;
+        }
+
+        return null;
+    }
+
+    /** Formes susceptibles d'être déjà enregistrées : E.164 et numéro local sénégalais. */
+    public static function storedForms(?string $raw): array
+    {
+        $e164 = self::e164($raw);
+        if ($e164 === null) {
+            return [];
+        }
+
+        $forms = [$e164];
+        if (str_starts_with($e164, '+221') && strlen($e164) === 13) {
+            $forms[] = substr($e164, 4);
+        }
+
+        return $forms;
+    }
+}

@@ -1,0 +1,86 @@
+<?php
+
+namespace Modules\Dahira\Filament\Resources;
+
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Notifications\Notification;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Modules\Dahira\Filament\Concerns\ScopesToDahira;
+use Modules\Dahira\Filament\Resources\MeetingResource\Pages;
+use Modules\Dahira\Models\Meeting;
+use Modules\Dahira\Services\DahiraAccess;
+use Modules\Dahira\Services\DahiraNotifier;
+
+class MeetingResource extends Resource
+{
+    use ScopesToDahira;
+
+    public static function canViewAny(): bool
+    {
+        return \Modules\Core\Support\PanelAccess::allows('dahira_office');
+    }
+
+    protected static function officerRoles(): array
+    {
+        return DahiraAccess::OFFICER_ROLES;
+    }
+
+    protected static ?string $model = Meeting::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-megaphone';
+
+    protected static ?string $navigationGroup = 'Dahira';
+
+    protected static ?string $navigationLabel = 'Réunions';
+
+    protected static ?string $modelLabel = 'réunion';
+
+    protected static ?string $pluralModelLabel = 'Réunions';
+
+    public static function form(Form $form): Form
+    {
+        return $form->schema([
+            Forms\Components\Select::make('dahira_group_id')
+                ->label('Dahira')
+                ->relationship('group', 'id')
+                ->getOptionLabelFromRecordUsing(fn ($record) => $record->name_i18n['fr'] ?? $record->id)
+                ->searchable()
+                ->required(),
+            Forms\Components\TextInput::make('title')->label('Titre')->required(),
+            Forms\Components\DateTimePicker::make('starts_at')->label('Début')->required(),
+            Forms\Components\TextInput::make('location')->label('Lieu'),
+            Forms\Components\Textarea::make('agenda')->label('Ordre du jour'),
+        ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table->columns([
+            Tables\Columns\TextColumn::make('title')->label('Titre')->searchable(),
+            Tables\Columns\TextColumn::make('starts_at')->label('Début')->dateTime(),
+            Tables\Columns\TextColumn::make('attendances_count')->counts('attendances')->label('Présences'),
+            Tables\Columns\TextColumn::make('convened_at')->dateTime()->label('Convoquée'),
+        ])->actions([
+            Tables\Actions\Action::make('convene')
+                ->label('Convoquer')
+                ->requiresConfirmation()
+                ->action(function (Meeting $record) {
+                    $count = app(DahiraNotifier::class)->convene($record);
+                    Notification::make()->title("Convocation envoyée à {$count} membre(s)")->success()->send();
+                }),
+            Tables\Actions\EditAction::make(),
+        ]);
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListMeetings::route('/'),
+            'create' => Pages\CreateMeeting::route('/create'),
+            'edit' => Pages\EditMeeting::route('/{record}/edit'),
+        ];
+    }
+}
