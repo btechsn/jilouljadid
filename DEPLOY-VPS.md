@@ -76,17 +76,17 @@ Sans HTTPS tout de suite, le site répond en HTTP sur le port 80 (redirige vers 
 | Service | URL |
 |---------|-----|
 | Site | https://jilouljadid.com |
-| Admin | https://jilouljadid.com/institut/administration |
+| Admin | https://jilouljadid.com/jj/administration |
 | API | https://jilouljadid.com/api/v1 |
 
-Seed : `admin@nujumalhuda.com` / `password` — **à changer tout de suite**.
+Seed : `admin@jilouljadid.com` / `password` — **à changer tout de suite**.
 
 ## Architecture
 
 ```
 Internet → DNS jilouljadid.com → 185.98.139.60
          → nginx:80/443
-              ├─ /api, /institut/administration → Laravel
+              ├─ /api, /jj/administration → Laravel
               ├─ /ws → Reverb
               └─ / → Next.js
          PostgreSQL + Redis (interne Docker)

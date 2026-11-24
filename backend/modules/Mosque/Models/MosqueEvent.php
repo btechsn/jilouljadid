@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 use Modules\Core\Models\Media;
 use Modules\Core\Models\Organization;
 use Modules\Core\Models\User;
-use Modules\Mosque\Models\EventRegistration;
 
 class MosqueEvent extends Model
 {
@@ -34,6 +34,8 @@ class MosqueEvent extends Model
         'requires_registration',
         'registered_count',
         'image_media_id',
+        'cover_path',
+        'gallery_paths',
         'youtube_url',
         'status',
         'is_featured',
@@ -42,6 +44,7 @@ class MosqueEvent extends Model
     protected $casts = [
         'title_i18n' => 'array',
         'description_i18n' => 'array',
+        'gallery_paths' => 'array',
         'start_at' => 'datetime',
         'end_at' => 'datetime',
         'is_recurring' => 'boolean',
@@ -50,6 +53,17 @@ class MosqueEvent extends Model
         'capacity' => 'integer',
         'registered_count' => 'integer',
     ];
+
+    protected static function booted(): void
+    {
+        static::saving(function (MosqueEvent $event): void {
+            if ($event->status === 'cancelled') {
+                return;
+            }
+
+            $event->status = $event->computeStatus();
+        });
+    }
 
     public function organization(): BelongsTo
     {
@@ -90,21 +104,102 @@ class MosqueEvent extends Model
 
     public function scopePublicList($query)
     {
-        return $query->whereIn('status', ['upcoming', 'ongoing', 'completed'])
+        return $query
+            ->where(function ($query): void {
+                $query->where('status', '!=', 'cancelled')
+                    ->orWhereNull('status');
+            })
+            ->orderByDesc('is_featured')
             ->orderBy('start_at');
+    }
+
+    /** Statut dérivé des dates (sauf annulé). */
+    public function computeStatus(): string
+    {
+        $now = now();
+        $start = $this->start_at;
+        $end = $this->end_at ?? $this->start_at?->copy()->addHours(3);
+
+        if (! $start) {
+            return 'upcoming';
+        }
+
+        if ($end && $end->isPast()) {
+            return 'completed';
+        }
+
+        if ($start->lte($now) && (! $end || $end->gte($now))) {
+            return 'ongoing';
+        }
+
+        return 'upcoming';
+    }
+
+    public function syncStatusFromDates(bool $save = true): void
+    {
+        if ($this->status === 'cancelled') {
+            return;
+        }
+
+        $computed = $this->computeStatus();
+        if ($this->status !== $computed) {
+            $this->status = $computed;
+            if ($save && $this->exists) {
+                $this->saveQuietly();
+            }
+        }
+    }
+
+    public function coverUrl(): ?string
+    {
+        $path = $this->cover_path;
+
+        if (is_array($path)) {
+            $path = reset($path) ?: null;
+        }
+
+        if (is_string($path) && trim($path) !== '') {
+            $path = ltrim(str_replace('\\', '/', trim($path)), '/');
+
+            return Storage::disk('public')->url($path);
+        }
+
+        return $this->image?->url();
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function galleryUrls(): array
+    {
+        $paths = $this->gallery_paths;
+        if (! is_array($paths)) {
+            $paths = [];
+        }
+
+        $urls = [];
+        foreach ($paths as $path) {
+            if (is_array($path)) {
+                $path = reset($path) ?: null;
+            }
+            if (! is_string($path) || trim($path) === '') {
+                continue;
+            }
+            $path = ltrim(str_replace('\\', '/', trim($path)), '/');
+            $urls[] = Storage::disk('public')->url($path);
+        }
+
+        $cover = $this->coverUrl();
+        if ($cover && ! in_array($cover, $urls, true)) {
+            array_unshift($urls, $cover);
+        }
+
+        return array_values(array_unique($urls));
     }
 
     public function isFinished(): bool
     {
-        if ($this->status === 'completed') {
-            return true;
-        }
-
-        if ($this->end_at) {
-            return $this->end_at->isPast();
-        }
-
-        return $this->start_at?->isPast() ?? false;
+        return $this->computeStatus() === 'completed' || $this->status === 'completed';
     }
 
     public function isFull(): bool
@@ -114,8 +209,10 @@ class MosqueEvent extends Model
 
     public function canRegister(): bool
     {
-        return ! $this->isFinished()
+        return $this->requires_registration
+            && ! $this->isFinished()
             && ! $this->isFull()
-            && $this->status !== 'cancelled';
+            && $this->status !== 'cancelled'
+            && $this->computeStatus() !== 'completed';
     }
 }

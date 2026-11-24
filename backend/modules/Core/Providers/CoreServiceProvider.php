@@ -31,10 +31,10 @@ class CoreServiceProvider extends ServiceProvider
                 return;
             }
 
-            $panel->discoverResources(
-                in: __DIR__.'/../Filament/Resources',
-                for: 'Modules\\Core\\Filament\\Resources',
-            );
+            // Utilisateurs uniquement — conformité / mineurs hors panneau JJ.
+            $panel->resources([
+                \Modules\Core\Filament\Resources\UserResource::class,
+            ]);
         });
     }
 

@@ -10,101 +10,110 @@ use Modules\Dahira\Models\ContributionPlan;
 use Modules\Dahira\Models\DahiraGroup;
 use Modules\Dahira\Models\Meeting;
 
+/**
+ * Sections du mouvement (affichées comme « Sections » dans l’admin).
+ */
 class DahiraSeeder extends Seeder
 {
     public function run(): void
     {
         foreach ([
-            'dahira_muqaddam' => 'Muqaddam',
-            'dahira_secretary' => 'Secrétaire',
-            'dahira_treasurer' => 'Trésorier',
-            'dahira_member' => 'Membre',
+            'dahira_muqaddam' => 'Responsable de section',
+            'dahira_secretary' => 'Secrétaire de section',
+            'dahira_treasurer' => 'Trésorier de section',
+            'dahira_member' => 'Membre de section',
         ] as $name => $label) {
             Role::firstOrCreate(['name' => $name], [
                 'display_name' => $label,
-                'description' => 'Rôle interne d\'un dahira',
+                'description' => $label,
                 'is_system' => true,
             ]);
         }
 
-        $organization = Organization::query()->where('slug', 'dahira-nujum-al-huda')->first() ?? new Organization();
-        $organization->type = OrganizationType::DAHIRA;
-        $organization->slug = 'dahira-nujum-al-huda';
-        $organization->country = 'SN';
-        $organization->city = 'Dakar';
-        $organization->is_active = true;
-        $organization->setTranslations('name', [
-            'fr' => 'Dahira Jiloul Jadid',
-            'en' => 'Jiloul Jadid Dahira',
-            'ar' => 'دائرة الجيل الجديد',
-        ]);
-        $organization->save();
+        Meeting::query()->delete();
+        ContributionPlan::query()->delete();
+        DahiraGroup::query()->delete();
 
-        $group = DahiraGroup::updateOrCreate(
-            ['organization_id' => $organization->id],
+        $sections = [
             [
-                'name_i18n' => [
-                    'fr' => 'Dahira Jiloul Jadid',
-                    'en' => 'Jiloul Jadid Dahira',
-                    'ar' => 'دائرة الجيل الجديد',
+                'slug' => 'section-jeunesse',
+                'name' => [
+                    'fr' => 'Jeunesse & fraternité',
+                    'en' => 'Youth & brotherhood',
+                    'ar' => 'الشباب والأخوة',
                 ],
-                'description_i18n' => [
-                    'fr' => 'Cercle principal du centre : dhikr, entraide et service à la zawiya.',
-                    'en' => 'Main circle of the centre: dhikr, mutual aid and service at the zawiya.',
-                    'ar' => 'الحلقة الرئيسية للمركز: ذكر وتعاون وخدمة في الزاوية.',
+                'description' => [
+                    'fr' => 'Se connaître, se rapprocher et renforcer l’appartenance à la grande fraternité islamique.',
+                    'en' => 'To foster mutual knowledge and belonging to the great Islamic brotherhood.',
+                    'ar' => 'التعارف والتقارب وتعزيز الانتماء إلى الأخوة الإسلامية الكبرى.',
                 ],
-                'meeting_weekday' => 5,
-                'meeting_time' => '16:00:00',
-                'location' => 'Zawiya Jiloul Jadid, Sud Foire',
-                'is_active' => true,
-            ]
-        );
-
-        ContributionPlan::updateOrCreate(
-            ['dahira_group_id' => $group->id, 'frequency' => 'monthly'],
-            [
-                'name_i18n' => ['fr' => 'Cotisation mensuelle', 'en' => 'Monthly contribution', 'ar' => 'الاشتراك الشهري'],
-                'amount_minor' => 2000,
-                'currency' => 'XOF',
-                'due_day' => 5,
-                'is_active' => true,
-            ]
-        );
-
-        $meetings = [
-            [
-                'title' => 'Réunion hebdomadaire du dahira',
-                'agenda' => 'Dhikr, rappel et points d’organisation du cercle.',
-                'starts_at' => now()->next('Friday')->setTime(16, 0),
-                'location' => 'Zawiya Jiloul Jadid',
             ],
             [
-                'title' => 'Préparation du service communautaire',
-                'agenda' => 'Organisation de l’entraide et des actions du mois.',
-                'starts_at' => now()->next('Friday')->addWeek()->setTime(16, 0),
-                'location' => 'Zawiya Jiloul Jadid',
+                'slug' => 'section-transmission',
+                'name' => [
+                    'fr' => 'Transmission',
+                    'en' => 'Transmission',
+                    'ar' => 'النقل والتوريث',
+                ],
+                'description' => [
+                    'fr' => 'Préserver le patrimoine et la voie du Cheikh, par la sagesse et la bonne exhortation.',
+                    'en' => 'Preserve the heritage and the path of the Sheikh, through wisdom and good counsel.',
+                    'ar' => 'حفظ التراث وطريق الشيخ بالحكمة والموعظة الحسنة.',
+                ],
             ],
             [
-                'title' => 'Majlis des membres',
-                'agenda' => 'Bilan des cotisations et projets du dahira.',
-                'starts_at' => now()->next('Friday')->addWeeks(2)->setTime(16, 30),
-                'location' => 'Institut Jiloul Jadid, Sud Foire',
+                'slug' => 'section-service',
+                'name' => [
+                    'fr' => 'Service',
+                    'en' => 'Service',
+                    'ar' => 'الخدمة',
+                ],
+                'description' => [
+                    'fr' => 'Œuvrer concrètement pour le bien : entraide, présence et engagement auprès des nouvelles générations.',
+                    'en' => 'Work concretely for the good: mutual aid, presence and commitment to the new generations.',
+                    'ar' => 'العمل من أجل الخير: التضامن والحضور والالتزام مع الأجيال الجديدة.',
+                ],
+            ],
+            [
+                'slug' => 'section-unite',
+                'name' => [
+                    'fr' => 'Unité de la Fayda',
+                    'en' => 'Unity of the Fayda',
+                    'ar' => 'وحدة الفيضة',
+                ],
+                'description' => [
+                    'fr' => 'Refuser les divisions, rapprocher les rangs et avancer ensemble.',
+                    'en' => 'Reject divisions, bring ranks closer and move forward together.',
+                    'ar' => 'رفض الفرقة وتقريب الصفوف والتقدم معاً.',
+                ],
             ],
         ];
 
-        foreach ($meetings as $row) {
-            Meeting::updateOrCreate(
+        foreach ($sections as $section) {
+            $organization = Organization::query()->firstOrNew(['slug' => $section['slug']]);
+            $organization->type = OrganizationType::DAHIRA;
+            $organization->country = 'SN';
+            $organization->city = 'Dakar';
+            $organization->is_active = true;
+            $organization->setTranslations('name', $section['name']);
+            $organization->save();
+
+            DahiraGroup::updateOrCreate(
+                ['organization_id' => $organization->id],
                 [
-                    'dahira_group_id' => $group->id,
-                    'title' => $row['title'],
-                ],
-                [
-                    'starts_at' => $row['starts_at'],
-                    'location' => $row['location'],
-                    'agenda' => $row['agenda'],
-                    'convened_at' => null,
+                    'name_i18n' => $section['name'],
+                    'description_i18n' => $section['description'],
+                    'meeting_weekday' => null,
+                    'meeting_time' => null,
+                    'location' => 'Dakar',
+                    'is_active' => true,
                 ]
             );
         }
+
+        // Ancienne org dahira unique
+        Organization::query()->where('slug', 'dahira-nujum-al-huda')->update(['is_active' => false]);
+
+        $this->command?->info('✅ 4 sections Jiloul Jadid.');
     }
 }

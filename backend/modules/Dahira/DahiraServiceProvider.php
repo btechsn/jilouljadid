@@ -20,10 +20,10 @@ class DahiraServiceProvider extends ServiceProvider
                 return;
             }
 
-            $panel->discoverResources(
-                in: __DIR__ . '/Filament/Resources',
-                for: 'Modules\\Dahira\\Filament\\Resources',
-            );
+            // Sections du mouvement (ex-dahiras).
+            $panel->resources([
+                \Modules\Dahira\Filament\Resources\DahiraGroupResource::class,
+            ]);
         });
     }
 

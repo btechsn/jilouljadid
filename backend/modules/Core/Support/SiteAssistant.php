@@ -136,9 +136,9 @@ final class SiteAssistant
             'institute',
             'Jiloul Jadid',
             match ($locale) {
-                'en' => 'Franco-Anglo-Arabic institute in Dakar. The Quran, the Arabic language, the Islamic sciences and the works of Sheikh Ibrahim Niasse.',
-                'ar' => 'معهد فرنسي إنجليزي عربي في دكار. القرآن واللغة العربية والعلوم الإسلامية ومؤلفات الشيخ إبراهيم نياس.',
-                default => 'Institut franco-anglo-arabe à Dakar. Le Coran, la langue arabe, les sciences islamiques et les œuvres de Cheikh Ibrahim Niasse.',
+                'en' => 'A youth movement founded by Seydina Aliou Cissé, son of Imam Cheikh Tidiane Cissé. Together for the good.',
+                'ar' => 'حركة شبابية أسسها سيدنا علي سيسي، نجل الإمام الشيخ تجاني سيسي. معاً من أجل الخير.',
+                default => 'Mouvement de jeunesse fondé par Seydina Aliou Cissé, fils de l’Imam Cheikh Tidiane Cissé. Ensemble pour le bien.',
             },
             '/'.$locale,
         );

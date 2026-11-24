@@ -127,7 +127,7 @@ class SendNewsletter extends Page implements HasForms, HasTable
         return $form
             ->schema([
                 Section::make('Formulaire du site')
-                    ->description('Textes du champ d’inscription affiché dans le pied de page.')
+                    ->description('Textes du champ d’inscription affiché dans le pied de page Jiloul Jadid.')
                     ->schema([
                         Toggle::make('footer.newsletter_enabled')
                             ->label('Afficher la newsletter')

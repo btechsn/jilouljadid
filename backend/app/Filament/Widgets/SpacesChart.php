@@ -16,7 +16,7 @@ class SpacesChart extends ChartWidget
 
     protected static ?string $heading = 'Volume par espace';
 
-    protected static ?string $description = 'Ce que chaque partie de l’institut contient aujourd’hui.';
+    protected static ?string $description = 'Ce que chaque partie du mouvement contient aujourd’hui.';
 
     protected static ?string $maxHeight = '16rem';
 

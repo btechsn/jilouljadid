@@ -31,6 +31,9 @@ class TestimonialResource extends Resource
             Forms\Components\TextInput::make('author_name')->required(),
             Forms\Components\Select::make('relation')->options([
                 'parent' => 'Parent',
+                'member' => 'Membre',
+                'student' => 'Élève',
+                'teacher' => 'Enseignant',
                 'alumni' => 'Ancien élève',
                 'other' => 'Autre',
             ])->required(),

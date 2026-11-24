@@ -37,13 +37,13 @@ class DahiraGroupResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
-    protected static ?string $navigationGroup = 'Dahira';
+    protected static ?string $navigationGroup = 'Sections';
 
-    protected static ?string $navigationLabel = 'Dahiras';
+    protected static ?string $navigationLabel = 'Sections';
 
-    protected static ?string $modelLabel = 'dahira';
+    protected static ?string $modelLabel = 'section';
 
-    protected static ?string $pluralModelLabel = 'Dahiras';
+    protected static ?string $pluralModelLabel = 'Sections';
 
     public static function form(Form $form): Form
     {

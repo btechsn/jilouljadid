@@ -46,12 +46,12 @@ body:has(.nh-login) {
 
 .nh-login-logo {
   display: block;
-  width: 3.25rem;
-  height: 3.25rem;
-  margin: 0 auto 0.7rem;
+  width: 4.25rem;
+  height: 4.25rem;
+  margin: 0 auto 0.85rem;
   border-radius: 999px;
   object-fit: cover;
-  object-position: center 28%;
+  object-position: center;
   box-shadow: 0 0 0 3px #fff, 0 0 0 4px #e3c86d;
 }
 

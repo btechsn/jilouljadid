@@ -9,10 +9,12 @@ import { PageHeading } from "@/components/layout/page-heading";
 import { useLiveStreams, useSocialAccounts, type SocialAccount } from "@/hooks/useMediaLibrary";
 import type { LiveStream } from "@/types/api";
 import { markEditorialFallback } from "@/lib/editorial";
+import { toPublicMediaUrl } from "@/lib/media";
 import { cn } from "@/lib/utils";
 
 const TYPES = ["general", "prayer", "khutba", "event"] as const;
 const PLATFORM_KEYS = ["youtube", "facebook", "tiktok", "instagram"] as const;
+const LIVE_PLAYER_DEFAULT_POSTER = "/brand/direct-default.png";
 
 function formatWhen(value: string | null | undefined, locale: string) {
   if (!value) return null;
@@ -87,6 +89,7 @@ export function LiveBoard() {
   const t = useTranslations("live");
   const pages = useTranslations("pages.live");
   const [page, setPage] = useState(1);
+  const [posterUrl, setPosterUrl] = useState(LIVE_PLAYER_DEFAULT_POSTER);
   const [type, setType] = useState("");
   const [searchDraft, setSearchDraft] = useState("");
   const [search, setSearch] = useState("");
@@ -101,6 +104,25 @@ export function LiveBoard() {
     perPage: 9,
   });
   const { data: socials } = useSocialAccounts();
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { loadSiteSettings } = await import("@/lib/site-settings");
+        const { toPublicMediaUrl } = await import("@/lib/media");
+        const settings = await loadSiteSettings();
+        if (cancelled) return;
+        const url = toPublicMediaUrl(settings.livePosterUrl, LIVE_PLAYER_DEFAULT_POSTER);
+        if (url) setPosterUrl(url);
+      } catch {
+        /* garde le poster local */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     setPage(1);
@@ -138,18 +160,19 @@ export function LiveBoard() {
 
   return (
     <article>
-      <Hero image="/brand/slide-live.jpg" eyebrow={pages("eyebrow")} title={pages("title")} lede={pages("lede")} />
-
       <div className="bg-[#f3f4f6]">
-        <div className="nh-container py-10 sm:py-12">
+        <div className="nh-container space-y-8 py-8 sm:py-10">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem]">
             <div className="min-w-0 space-y-8">
-              <LivePlayerPanel stream={featuredLive} />
-
-              {socials.length > 0 ? (
+              {socials.length > 0 || featuredLive ? (
                 <section>
-                  <h2 className="mb-4 font-sans text-lg font-extrabold text-content">{t("socialSidebarTitle")}</h2>
-                  <SocialNetworksCard accounts={socials} onOpen={openSocial} />
+                  <h2 className="mb-4 font-sans text-lg font-extrabold text-content">{pages("title")}</h2>
+                  <SocialNetworksCard
+                    accounts={socials}
+                    stream={featuredLive}
+                    posterUrl={posterUrl}
+                    onOpen={openSocial}
+                  />
                 </section>
               ) : null}
 
@@ -158,7 +181,7 @@ export function LiveBoard() {
                   <h2 className="mb-4 font-sans text-lg font-extrabold text-content">{t("liveNow")}</h2>
                   <div className="grid gap-5 sm:grid-cols-2">
                     {liveNow.slice(1).map((stream) => (
-                      <StreamCard key={`live-${stream.id}`} stream={stream} locale={locale} highlight />
+                      <StreamCard key={`live-${stream.id}`} stream={stream} locale={locale} highlight posterUrl={posterUrl} />
                     ))}
                   </div>
                 </section>
@@ -171,18 +194,18 @@ export function LiveBoard() {
                   ))}
                 </div>
               ) : data.length === 0 ? (
-                <p className="rounded-2xl bg-white p-6 text-content-secondary">{t("empty")}</p>
+                <p className="rounded-2xl bg-white p-6 text-content-secondary">{pages("empty")}</p>
               ) : (
                 <section>
                   <div className="mb-5">
-                    <h2 className="font-sans text-lg font-extrabold text-content">{t("listTitle")}</h2>
+                    <h2 className="font-sans text-lg font-extrabold text-content">{pages("listTitle")}</h2>
                     <p className="nh-numeric mt-1 text-sm text-content-secondary">
                       {t("resultsCount", { count: meta?.total ?? data.length })}
                     </p>
                   </div>
                   <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                     {data.map((stream) => (
-                      <StreamCard key={stream.id} stream={stream} locale={locale} />
+                      <StreamCard key={stream.id} stream={stream} locale={locale} posterUrl={posterUrl} />
                     ))}
                   </div>
                   {meta && meta.last_page > 1 ? (
@@ -234,79 +257,6 @@ export function LiveBoard() {
         <SocialEmbedModal account={embedAccount} onClose={() => setEmbedAccount(null)} />
       ) : null}
     </article>
-  );
-}
-
-function LivePlayerPanel({ stream }: { stream: LiveStream | null }) {
-  const t = useTranslations("live");
-  const embed = stream ? resolveEmbed(stream) : null;
-  const platform = stream?.external_platform;
-  const openUrl = stream?.external_url || null;
-  const isLive = Boolean(stream);
-
-  return (
-    <section className={cn("overflow-hidden rounded-2xl bg-white shadow-sm", isLive ? "nh-live-frame" : "ring-1 ring-black/5")}>
-      <div className="relative aspect-video bg-brand-950">
-        {embed ? (
-          <iframe
-            title={stream?.title || t("liveNow")}
-            src={embed}
-            className="absolute inset-0 h-full w-full border-0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          />
-        ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-brand-950 px-6 text-center text-white">
-            <p className="font-sans text-xl font-extrabold sm:text-2xl">
-              {isLive ? stream?.title || t("liveNow") : t("notYetLive")}
-            </p>
-            <p className="max-w-md text-sm text-white/75">
-              {isLive ? t("socialNoEmbed") : t("notYetLiveHint")}
-            </p>
-            {isLive && openUrl ? (
-              <a
-                href={openUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-2 inline-flex h-10 items-center rounded-full bg-gold-300 px-5 text-xs font-semibold uppercase tracking-wide text-brand-950"
-              >
-                {platform ? t("detail.openOnPlatform", { platform: platformLabel(t, platform) }) : t("openLive")}
-              </a>
-            ) : null}
-          </div>
-        )}
-
-        {isLive ? (
-          <span className="absolute start-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-red-600 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-md">
-            <span className="nh-live-dot size-2 rounded-full bg-white" aria-hidden />
-            {t("liveBadge")}
-          </span>
-        ) : null}
-      </div>
-
-      {isLive && stream ? (
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-black/5 px-5 py-4">
-          <div className="min-w-0">
-            <p className="truncate font-sans text-base font-extrabold text-content">{stream.title}</p>
-            {platform ? (
-              <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-brand-700">
-                {platformLabel(t, platform)}
-              </p>
-            ) : null}
-          </div>
-          {openUrl ? (
-            <a
-              href={openUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-9 shrink-0 items-center rounded-full border border-brand-700 px-4 text-[11px] font-semibold uppercase tracking-wide text-brand-800"
-            >
-              {t("openLive")}
-            </a>
-          ) : null}
-        </div>
-      ) : null}
-    </section>
   );
 }
 
@@ -432,48 +382,108 @@ function SocialIcon({ platform }: { platform: string }) {
 
 function SocialNetworksCard({
   accounts,
+  stream,
+  posterUrl,
   onOpen,
 }: {
   accounts: SocialAccount[];
+  stream: LiveStream | null;
+  posterUrl: string;
   onOpen: (account: SocialAccount) => void;
 }) {
   const t = useTranslations("live");
+  const pages = useTranslations("pages.live");
+  const embed = stream ? resolveEmbed(stream) : null;
+  const isLive = Boolean(stream);
+  const openUrl = stream?.external_url || null;
+  const platform = stream?.external_platform;
+  const fallbackPoster = posterUrl || LIVE_PLAYER_DEFAULT_POSTER;
+  const poster = toPublicMediaUrl(stream?.thumbnail_url, fallbackPoster);
+  const usingDefaultPoster = !stream?.thumbnail_url?.trim();
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-2 ring-gold-300 transition hover:-translate-y-0.5 hover:shadow-md">
-      <div className="relative aspect-[16/10] overflow-hidden bg-brand-900">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/brand/slide-replay.jpg"
-          alt=""
-          className="size-full object-cover transition duration-500 group-hover:scale-105"
-        />
-        <span className="absolute start-3 top-3 rounded-full bg-gold-300 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-brand-950">
-          {t("socialSidebarEyebrow")}
-        </span>
+    <article
+      className={cn(
+        "group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md",
+        isLive ? "nh-live-frame" : "ring-2 ring-gold-300",
+      )}
+    >
+      <div className="relative aspect-video min-h-48 w-full overflow-hidden bg-brand-900 sm:min-h-[18rem]">
+        {embed ? (
+          <iframe
+            title={stream?.title || t("liveNow")}
+            src={embed}
+            className="absolute inset-0 h-full w-full border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        ) : (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={poster}
+              alt=""
+              width={1280}
+              height={720}
+              className={cn(
+                "absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105",
+                usingDefaultPoster ? "object-[center_28%]" : "object-center",
+              )}
+            />
+            {isLive && openUrl ? (
+              <div className="absolute inset-x-0 bottom-0 z-10 flex justify-end bg-gradient-to-t from-brand-950/70 to-transparent p-4">
+                <a
+                  href={openUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-9 items-center rounded-full bg-gold-300 px-4 text-[11px] font-semibold uppercase tracking-wide text-brand-950"
+                >
+                  {platform
+                    ? t("detail.openOnPlatform", { platform: platformLabel(t, platform) })
+                    : t("openLive")}
+                </a>
+              </div>
+            ) : null}
+          </>
+        )}
+
+        {isLive ? (
+          <span className="absolute start-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-red-600 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-md">
+            <span className="nh-live-dot size-2 rounded-full bg-white" aria-hidden />
+            {t("liveBadge")}
+          </span>
+        ) : (
+          <span className="absolute start-3 top-3 z-10 rounded-full bg-gold-300 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-brand-950">
+            {pages("eyebrow")}
+          </span>
+        )}
       </div>
       <div className="flex flex-1 flex-col p-5">
-        <p className="text-xs font-medium text-content-secondary">{t("socialSidebarEyebrow")}</p>
+        <p className="text-xs font-medium text-content-secondary">{pages("eyebrow")}</p>
         <h3 className="mt-2 font-sans text-base font-extrabold uppercase tracking-wide text-content line-clamp-2">
-          {t("socialSidebarTitle")}
+          {isLive && stream?.title ? stream.title : pages("title")}
         </h3>
-        <p className="mt-3 flex-1 text-sm text-content-secondary line-clamp-3">{t("socialSidebarLede")}</p>
-        <ul className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
-          {accounts.map((account) => (
-            <li key={`live-social-${account.platform}-${account.handle}`}>
-              <button
-                type="button"
-                onClick={() => onOpen(account)}
-                title={platformLabel(t, account.platform)}
-                aria-label={platformLabel(t, account.platform)}
-                data-platform={account.platform}
-                className="nh-live-social inline-flex size-10 items-center justify-center rounded-full shadow-sm"
-              >
-                <SocialIcon platform={account.platform} />
-              </button>
-            </li>
-          ))}
-        </ul>
+        <p className="mt-3 flex-1 text-sm text-content-secondary line-clamp-3">
+          {isLive ? t("liveNow") : pages("lede")}
+        </p>
+        {accounts.length > 0 ? (
+          <ul className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
+            {accounts.map((account) => (
+              <li key={`live-social-${account.platform}-${account.handle}`}>
+                <button
+                  type="button"
+                  onClick={() => onOpen(account)}
+                  title={platformLabel(t, account.platform)}
+                  aria-label={platformLabel(t, account.platform)}
+                  data-platform={account.platform}
+                  className="nh-live-social inline-flex size-10 items-center justify-center rounded-full shadow-sm"
+                >
+                  <SocialIcon platform={account.platform} />
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
     </article>
   );
@@ -483,14 +493,16 @@ export function StreamCard({
   stream,
   locale,
   highlight = false,
+  posterUrl = LIVE_PLAYER_DEFAULT_POSTER,
 }: {
   stream: LiveStream;
   locale: string;
   highlight?: boolean;
+  posterUrl?: string;
 }) {
   const t = useTranslations("live");
   const href = `/${locale}/direct/${stream.id}`;
-  const thumb = stream.thumbnail_url || "/brand/slide-live.jpg";
+  const thumb = toPublicMediaUrl(stream.thumbnail_url, posterUrl || LIVE_PLAYER_DEFAULT_POSTER);
   const isLive = stream.status === "live";
   const whenLabel = formatWhen(
     stream.status === "live"

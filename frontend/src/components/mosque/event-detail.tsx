@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+
+import { isRemoteUpload } from "@/lib/media";
 import Link from "next/link";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -35,12 +37,21 @@ export function EventDetail({ event }: { event: EventCard }) {
   const arabic = locale === "ar";
 
   const [showRegister, setShowRegister] = useState(false);
+  const registerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (searchParams.get("inscription") === "1" && !event.isFinished && event.canRegister) {
       setShowRegister(true);
     }
   }, [searchParams, event.isFinished, event.canRegister]);
+
+  useEffect(() => {
+    if (!showRegister) return;
+    const node = registerRef.current;
+    if (!node) return;
+    node.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [showRegister]);
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
@@ -65,7 +76,22 @@ export function EventDetail({ event }: { event: EventCard }) {
     setBusy(true);
     setStatus("idle");
     try {
-      await new Promise((resolve) => window.setTimeout(resolve, 400));
+      const response = await fetch(`/api/v1/mosque/events/${encodeURIComponent(event.id)}/register`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Accept-Language": locale,
+        },
+        body: JSON.stringify({
+          first_name: firstName.trim(),
+          last_name: lastName.trim(),
+          phone: phone.trim(),
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("register-failed");
+      }
       setStatus("ok");
       setFirstName("");
       setLastName("");
@@ -101,7 +127,10 @@ export function EventDetail({ event }: { event: EventCard }) {
             {!event.isFinished && event.canRegister ? (
               <button
                 type="button"
-                onClick={() => setShowRegister(true)}
+                onClick={() => {
+                  setShowRegister(true);
+                  setStatus("idle");
+                }}
                 className="inline-flex items-center rounded-full bg-brand-900 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white hover:bg-brand-800"
               >
                 {t("participate")}
@@ -109,51 +138,12 @@ export function EventDetail({ event }: { event: EventCard }) {
             ) : null}
           </div>
 
-          {meta ? (
-            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-content-secondary">
-              <span className="inline-flex items-center gap-2 nh-numeric">
-                <CalendarIcon />
-                {meta}
-              </span>
-            </div>
-          ) : null}
-
-          <div className="relative mt-8 overflow-hidden rounded-2xl bg-brand-500/10">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={event.image}
-              alt=""
-              data-essential=""
-              className="aspect-video w-full object-cover object-top"
-            />
-          </div>
-
-          <div className="prose prose-neutral mt-8 max-w-none text-base leading-relaxed text-content-secondary prose-p:mb-4">
-            {body.split(/\n+/).map((paragraph) => (
-              <p key={paragraph.slice(0, 40)}>{paragraph}</p>
-            ))}
-          </div>
-
-          {gallery.length > 1 ? (
-            <section className="mt-10">
-              <h2 className="font-sans text-lg font-extrabold text-content">{t("gallery")}</h2>
-              <EventGalleryCarousel images={gallery} />
-            </section>
-          ) : null}
-
-          {event.youtubeUrl ? (
-            <a
-              href={event.youtubeUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-8 inline-flex items-center rounded-full bg-brand-900 px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-white hover:bg-brand-800"
-            >
-              {t("learnMore")}
-            </a>
-          ) : null}
-
           {showRegister ? (
-            <section className="mt-10 rounded-3xl bg-[#f3f4f6] p-6 sm:p-8">
+            <section
+              ref={registerRef}
+              id="inscription"
+              className="mt-6 scroll-mt-28 rounded-3xl bg-[#f3f4f6] p-6 sm:p-8"
+            >
               <h2 className="font-sans text-xl font-extrabold text-content">{t("participate")}</h2>
               <p className="mt-1 text-sm text-content-secondary">{t("participant")}</p>
               {status === "ok" ? (
@@ -162,6 +152,7 @@ export function EventDetail({ event }: { event: EventCard }) {
                 <form onSubmit={submit} className="mt-6 grid gap-3 sm:grid-cols-2">
                   <input
                     required
+                    autoFocus
                     value={firstName}
                     onChange={(event) => setFirstName(event.target.value)}
                     placeholder={t("firstName")}
@@ -207,6 +198,56 @@ export function EventDetail({ event }: { event: EventCard }) {
                 </form>
               )}
             </section>
+          ) : null}
+
+          {meta ? (
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-content-secondary">
+              <span className="inline-flex items-center gap-2 nh-numeric">
+                <CalendarIcon />
+                {meta}
+              </span>
+            </div>
+          ) : null}
+
+          <div className="relative mt-8 overflow-hidden rounded-2xl bg-brand-500/10">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={event.image}
+              alt=""
+              data-essential=""
+              className="aspect-video w-full object-cover object-top"
+            />
+          </div>
+
+          {body.includes("<") ? (
+            <div
+              className="prose prose-neutral mt-8 max-w-none text-base leading-relaxed text-content-secondary prose-p:mb-4"
+              dangerouslySetInnerHTML={{ __html: body }}
+            />
+          ) : (
+            <div className="prose prose-neutral mt-8 max-w-none text-base leading-relaxed text-content-secondary prose-p:mb-4">
+              {body.split(/\n+/).map((paragraph) => (
+                <p key={paragraph.slice(0, 40)}>{paragraph}</p>
+              ))}
+            </div>
+          )}
+
+          {gallery.length > 1 ? (
+            <section className="mt-10">
+              <h2 className="font-sans text-lg font-extrabold text-content">{t("gallery")}</h2>
+              <EventGalleryCarousel images={gallery} />
+            </section>
+          ) : null}
+
+          {event.youtubeUrl ? (
+            <a
+              href={event.youtubeUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-8 inline-flex items-center rounded-full bg-brand-900 px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-white hover:bg-brand-800"
+            >
+              {t("learnMore")}
+            </a>
           ) : null}
 
           <div className="mt-10 border-t border-line pt-8">
@@ -312,7 +353,14 @@ function EventGalleryCarousel({ images }: { images: string[] }) {
               className="relative aspect-[4/3] shrink-0 overflow-hidden rounded-2xl ring-1 ring-black/5"
               style={{ width: slideWidth || undefined, flexBasis: slideWidth ? `${slideWidth}px` : `${100 / visible}%` }}
             >
-              <Image src={src} alt="" fill sizes="(min-width: 64rem) 20vw, 40vw" className="object-cover" />
+              <Image
+                src={src}
+                alt=""
+                fill
+                sizes="(min-width: 64rem) 20vw, 40vw"
+                className="object-cover"
+                unoptimized={isRemoteUpload(src)}
+              />
             </li>
           ))}
         </ul>

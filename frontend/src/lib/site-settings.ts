@@ -30,6 +30,10 @@ export type SiteSettings = {
   newsletterButton: LocalizedText;
   centreImageUrl: string;
   founderImageUrl: string;
+  livePosterUrl: string;
+  communityImageUrl: string;
+  mediaImageUrl: string;
+  contactImageUrl: string;
 };
 
 const USEFUL_LINKS: FooterLink[] = [
@@ -47,12 +51,12 @@ const OTHER_LINKS: FooterLink[] = [
 ];
 
 export const SITE_SETTINGS_FALLBACK: SiteSettings = {
-  address: "Dakar",
-  city: "Dakar",
-  phone: "+221 77 452 43 43",
-  email: "Jilouljadid1@gmail.com",
-  latitude: 14.7167,
-  longitude: -17.4677,
+  address: "Médina Baye",
+  city: "Kaolack",
+  phone: "+221 77 090 90 65",
+  email: "contact@jilouljadid.com",
+  latitude: 14.1676718,
+  longitude: -16.0582136,
   footerNote: "",
   plausibleDomain: "",
   logoUrl: "",
@@ -75,6 +79,10 @@ export const SITE_SETTINGS_FALLBACK: SiteSettings = {
   newsletterButton: { fr: "S'abonner", en: "Subscribe", ar: "اشترك" },
   centreImageUrl: "",
   founderImageUrl: "",
+  livePosterUrl: "",
+  communityImageUrl: "",
+  mediaImageUrl: "",
+  contactImageUrl: "",
 };
 
 export function localized(text: LocalizedText, locale: string): string {
@@ -123,6 +131,16 @@ export function mapsDirectionsUrl(settings: SiteSettings): string {
   return `https://www.google.com/maps/dir/?api=1&destination=${settings.latitude},${settings.longitude}`;
 }
 
+export async function loadSiteSettings(): Promise<SiteSettings> {
+  const { serverApiFetch } = await import("@/lib/server-api");
+  const body = await serverApiFetch("/settings/public", {
+    timeoutMs: 5000,
+    revalidate: 30,
+  });
+
+  return normalizeSiteSettings(body);
+}
+
 export function normalizeSiteSettings(body: unknown): SiteSettings {
   if (!body || typeof body !== "object") return SITE_SETTINGS_FALLBACK;
 
@@ -155,6 +173,10 @@ export function normalizeSiteSettings(body: unknown): SiteSettings {
     newsletterButton: readLocalized(data.newsletter_button, SITE_SETTINGS_FALLBACK.newsletterButton),
     centreImageUrl: typeof data.centre_image_url === "string" ? data.centre_image_url : "",
     founderImageUrl: typeof data.founder_image_url === "string" ? data.founder_image_url : "",
+    livePosterUrl: typeof data.live_poster_url === "string" ? data.live_poster_url : "",
+    communityImageUrl: typeof data.community_image_url === "string" ? data.community_image_url : "",
+    mediaImageUrl: typeof data.media_image_url === "string" ? data.media_image_url : "",
+    contactImageUrl: typeof data.contact_image_url === "string" ? data.contact_image_url : "",
   };
 }
 

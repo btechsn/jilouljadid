@@ -44,6 +44,6 @@ docker compose exec -T app php artisan storage:link || true
 
 echo ""
 echo "Site  : https://jilouljadid.com"
-echo "Admin : https://jilouljadid.com/institut/administration"
-echo "Login : admin@nujumalhuda.com / password"
+echo "Admin : https://jilouljadid.com/jj/administration"
+echo "Login : admin@jilouljadid.com / password"
 echo "DNS   : A @ et www → 185.98.139.60 (VPS LWS)"

@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+
+import { isRemoteUpload } from "@/lib/media";
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
@@ -22,6 +24,7 @@ export type EventCard = {
   canRegister: boolean;
   youtubeUrl: string;
   gallery?: string[];
+  featured?: boolean;
 };
 
 const FALLBACKS = [
@@ -99,6 +102,7 @@ function EventListItem({
             fill
             sizes="(min-width: 64rem) 20vw, 40vw"
             className="object-cover object-top"
+            unoptimized={isRemoteUpload(item.image || imageFallback)}
           />
           <span
             className={cn(
@@ -193,10 +197,12 @@ function EventSection({
   );
 }
 
-export function EventBoard({ items }: { items: EventCard[] }) {
+export function EventBoard({ items: initialItems = [] }: { items?: EventCard[] }) {
   const locale = useLocale();
   const t = useTranslations("pages.events");
   const common = useTranslations("common");
+  const [items, setItems] = useState<EventCard[]>(initialItems);
+  const [loading, setLoading] = useState(initialItems.length === 0);
   const [draft, setDraft] = useState("");
   const [query, setQuery] = useState("");
   const [from, setFrom] = useState("");
@@ -205,6 +211,27 @@ export function EventBoard({ items }: { items: EventCard[] }) {
   const [page, setPage] = useState(0);
   const [groupBy, setGroupBy] = useState<"status" | "type">("status");
 
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { fetchEventsClient } = await import("@/lib/events-api");
+        const live = await fetchEventsClient(locale);
+        // Toujours remplacer par le BO local dès que l’API répond (même si liste vide).
+        if (!cancelled && live !== null) {
+          setItems(live);
+        }
+      } catch {
+        /* garde initialItems */
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [locale]);
+
   const typesInData = useMemo(
     () => [...new Set(items.map((item) => item.type).filter(Boolean))],
     [items],
@@ -212,7 +239,12 @@ export function EventBoard({ items }: { items: EventCard[] }) {
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLocaleLowerCase(locale);
-    return [...items].sort(bySoonest).filter((item) => {
+    return [...items]
+      .sort((a, b) => {
+        if (!!a.featured !== !!b.featured) return a.featured ? -1 : 1;
+        return bySoonest(a, b);
+      })
+      .filter((item) => {
       const day = item.startAt.slice(0, 10);
       if (from && day && day < from) return false;
       if (to && day && day > to) return false;
@@ -304,9 +336,13 @@ export function EventBoard({ items }: { items: EventCard[] }) {
             </div>
           </div>
 
-          {filtered.length === 0 ? (
+          {loading && items.length === 0 ? (
             <p className="rounded-2xl bg-white p-6 text-content-secondary shadow-sm ring-1 ring-black/5">
-              {t("noMatch")}
+              …
+            </p>
+          ) : filtered.length === 0 ? (
+            <p className="rounded-2xl bg-white p-6 text-content-secondary shadow-sm ring-1 ring-black/5">
+              {query || type || from || to ? t("noMatch") : t("empty")}
             </p>
           ) : groupBy === "type" ? (
             <div className="space-y-10">

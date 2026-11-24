@@ -5,9 +5,11 @@
  */
 
 const API_BASES = [
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, ""),
+  // Local d'abord : ne jamais préférer la prod en dev (sinon liste ≠ BO).
   "http://127.0.0.1:8000/api/v1",
   "http://localhost:8000/api/v1",
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, ""),
+  process.env.INTERNAL_API_URL?.replace(/\/$/, ""),
 ].filter((base, index, all): base is string => Boolean(base) && all.indexOf(base) === index);
 
 const DEFAULT_REVALIDATE = 60;

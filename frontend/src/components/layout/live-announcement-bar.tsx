@@ -17,7 +17,7 @@ export function LiveAnnouncementBar() {
       return {
         id: item.id,
         text,
-        href: item.action_url || `/${locale}/centre/annonces?annonce=${encodeURIComponent(item.id)}`,
+        href: item.action_url || `/${locale}/evenements`,
       };
     })
     .filter((item): item is { id: string; text: string; href: string } => item !== null);
@@ -26,7 +26,7 @@ export function LiveAnnouncementBar() {
     <CommuniqueBar
       items={items}
       label={t("communique")}
-      listHref={`/${locale}/centre/annonces`}
+      listHref={`/${locale}/evenements`}
     />
   );
 }

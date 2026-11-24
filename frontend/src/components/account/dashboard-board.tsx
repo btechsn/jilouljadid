@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 import { AlertSection, LessonSection } from "@/components/account/account-extras";
 
 const ADMIN_URL =
-  process.env.NEXT_PUBLIC_ADMIN_URL || "http://127.0.0.1:8000/institut/administration";
+  process.env.NEXT_PUBLIC_ADMIN_URL || "http://127.0.0.1:8000/jj/administration";
 
 const KNOWN_ROLES = [
   "admin",

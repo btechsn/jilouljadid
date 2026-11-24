@@ -29,10 +29,7 @@ class LiveServiceProvider extends ServiceProvider
 
             $panel->resources([
                 \Modules\Live\Filament\Resources\LiveStreamResource::class,
-                \Modules\Live\Filament\Resources\LiveChannelResource::class,
                 \Modules\Live\Filament\Resources\SocialAccountResource::class,
-                \Modules\Live\Filament\Resources\VodRecordingResource::class,
-                \Modules\Live\Filament\Resources\LiveChatMessageResource::class,
             ]);
         });
     }

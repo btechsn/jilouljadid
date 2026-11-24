@@ -9,52 +9,55 @@ class SocialAccountSeeder extends Seeder
 {
     public function run(): void
     {
+        // Retire les anciens comptes Nujum
+        SocialAccount::query()->delete();
+
         $accounts = [
             [
                 'platform' => 'youtube',
-                'handle' => '@nujumalhuda',
-                'url' => 'https://www.youtube.com/@nujumalhuda',
-                'embed_url' => 'https://www.youtube.com/embed/live_stream?channel=UCPLACEHOLDER',
+                'handle' => '@jilouljadid',
+                'url' => 'https://www.youtube.com/@jilouljadid',
+                'embed_url' => null,
                 'redirect_only' => false,
                 'sort_order' => 1,
+                'is_active' => true,
             ],
             [
                 'platform' => 'facebook',
-                'handle' => 'nujumalhuda',
-                'url' => 'https://www.facebook.com/nujumalhuda',
+                'handle' => 'jilouljadid',
+                'url' => 'https://www.facebook.com/jilouljadid',
                 'embed_url' => null,
                 'redirect_only' => false,
                 'sort_order' => 2,
+                'is_active' => true,
             ],
             [
                 'platform' => 'instagram',
-                'handle' => '@nujumalhuda',
-                'url' => 'https://www.instagram.com/nujumalhuda',
+                'handle' => '@jilouljadid',
+                'url' => 'https://www.instagram.com/jilouljadid',
                 'embed_url' => null,
                 'redirect_only' => true,
                 'sort_order' => 3,
+                'is_active' => true,
             ],
             [
                 'platform' => 'tiktok',
-                'handle' => '@nujumalhuda',
-                'url' => 'https://www.tiktok.com/@nujumalhuda',
+                'handle' => '@jilouljadid',
+                'url' => 'https://www.tiktok.com/@jilouljadid',
                 'embed_url' => null,
                 'redirect_only' => true,
                 'sort_order' => 4,
+                'is_active' => true,
             ],
         ];
 
         foreach ($accounts as $row) {
             SocialAccount::updateOrCreate(
-                ['platform' => $row['platform'], 'handle' => $row['handle']],
-                [
-                    'url' => $row['url'],
-                    'embed_url' => $row['embed_url'],
-                    'redirect_only' => $row['redirect_only'],
-                    'is_active' => true,
-                    'sort_order' => $row['sort_order'],
-                ]
+                ['platform' => $row['platform']],
+                $row,
             );
         }
+
+        $this->command?->info('✅ Comptes sociaux Jiloul Jadid (à vérifier / corriger les URLs réelles).');
     }
 }

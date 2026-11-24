@@ -87,7 +87,7 @@ abstract class SettingsSectionPage extends Page implements HasForms
 
         $response = Http::timeout(8)
             ->withHeaders([
-                'User-Agent' => 'NujumAlHudaAdmin/1.0 (Jilouljadid1@gmail.com)',
+                'User-Agent' => 'JiloulJadidAdmin/1.0 (contact@jilouljadid.com)',
                 'Accept-Language' => 'fr',
             ])
             ->get('https://nominatim.openstreetmap.org/search', [

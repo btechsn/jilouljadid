@@ -10,6 +10,16 @@ class ListEvents extends ListRecords
 {
     protected static string $resource = EventResource::class;
 
+    public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
+    {
+        return 'Événements';
+    }
+
+    public function getBreadcrumb(): string
+    {
+        return 'Liste';
+    }
+
     protected function getHeaderActions(): array
     {
         return [

@@ -26,16 +26,17 @@ final class PlatformPages
     public static function definitions(): array
     {
         return [
+            self::page('home', 'Accueil', 5, 'pages/accueil', 'splash', \App\Filament\Pages\Content\HomePage::class),
             self::page('events', 'Événements', 10, 'pages/evenements', 'pages.events', \App\Filament\Pages\Content\EventsPage::class),
-            self::page('announcements', 'Annonces', 20, 'pages/annonces', 'pages.announcements', \App\Filament\Pages\Content\AnnouncementsPage::class),
-            self::page('live', 'En direct', 30, 'pages/direct', 'pages.live', \App\Filament\Pages\Content\LivePage::class),
-            self::page('replay', 'Replay', 40, 'pages/replay', 'pages.replay', \App\Filament\Pages\Content\ReplayPage::class),
-            self::page('media', 'Médiathèque', 50, 'pages/mediatheque', 'pages.media', \App\Filament\Pages\Content\MediaPage::class),
-            self::page('community', 'Communauté', 60, 'pages/communaute', 'pages.community', \App\Filament\Pages\Content\CommunityPage::class),
-            self::page('discussions', 'Discussions', 70, 'pages/discussions', 'pages.discussions', \App\Filament\Pages\Content\DiscussionsPage::class),
-            self::page('dahira', 'Dahiras', 80, 'pages/dahiras', 'pages.dahira', \App\Filament\Pages\Content\DahiraPage::class),
-            self::page('contact', 'Contact', 90, 'pages/contact', 'pages.contact', \App\Filament\Pages\Content\ContactPage::class),
-            // Pages héritées Nujum : conservées hors navigation.
+            self::page('live', 'En direct', 20, 'pages/direct', 'pages.live', \App\Filament\Pages\Content\LivePage::class),
+            self::page('media', 'Médiathèque', 30, 'pages/mediatheque', 'pages.media', \App\Filament\Pages\Content\MediaPage::class),
+            self::page('community', 'Communauté', 40, 'pages/communaute', 'pages.community', \App\Filament\Pages\Content\CommunityPage::class),
+            self::page('contact', 'Contact', 50, 'pages/contact', 'pages.contact', \App\Filament\Pages\Content\ContactPage::class),
+            // Hors navigation — héritage ou pages non exposées sur jilouljadid.com
+            self::page('dahira', 'Sections (textes)', 55, 'pages/sections', 'pages.dahira', \App\Filament\Pages\Content\DahiraPage::class, false),
+            self::page('announcements', 'Annonces (textes)', 70, 'pages/annonces', 'pages.announcements', \App\Filament\Pages\Content\AnnouncementsPage::class, false),
+            self::page('replay', 'Replay', 80, 'pages/replay', 'pages.replay', \App\Filament\Pages\Content\ReplayPage::class, false),
+            self::page('discussions', 'Discussions', 90, 'pages/discussions', 'pages.discussions', \App\Filament\Pages\Content\DiscussionsPage::class, false),
             self::page('centre', 'Centre', 100, 'pages/centre', 'doors.centre', \App\Filament\Pages\Content\CentrePage::class, false),
             self::page('zawiya', 'Zawiya', 110, 'pages/zawiya', 'pages.zawiya', \App\Filament\Pages\Content\ZawiyaPage::class, false),
             self::page('prayers', 'Horaires de prière', 120, 'pages/horaires', 'pages.prayers', \App\Filament\Pages\Content\PrayerTimesPage::class, false),
@@ -93,6 +94,23 @@ final class PlatformPages
         $node = data_get(self::messages('fr'), $definition['root']);
         $fields = [];
 
+        if ($id === 'home') {
+            $fields[] = [
+                'name' => 'image',
+                'path' => '',
+                'label' => 'Image de fond (splash)',
+                'type' => 'image',
+                'directory' => 'pages/accueil',
+            ];
+            $fields[] = [
+                'name' => 'founder_image',
+                'path' => '',
+                'label' => 'Photo du fondateur (Accueil)',
+                'type' => 'image',
+                'directory' => 'pages/accueil',
+            ];
+        }
+
         if ($id === 'centre') {
             $fields[] = [
                 'name' => 'image',
@@ -110,6 +128,46 @@ final class PlatformPages
                 'label' => 'Photo du fondateur',
                 'type' => 'image',
                 'directory' => 'pages/zawiya',
+            ];
+        }
+
+        if ($id === 'live') {
+            $fields[] = [
+                'name' => 'poster',
+                'path' => '',
+                'label' => 'Image du lecteur (sans direct)',
+                'type' => 'image',
+                'directory' => 'pages/direct',
+            ];
+        }
+
+        if ($id === 'community') {
+            $fields[] = [
+                'name' => 'image',
+                'path' => '',
+                'label' => 'Image du bandeau (Communauté)',
+                'type' => 'image',
+                'directory' => 'pages/communaute',
+            ];
+        }
+
+        if ($id === 'media') {
+            $fields[] = [
+                'name' => 'image',
+                'path' => '',
+                'label' => 'Image du bandeau (Médiathèque)',
+                'type' => 'image',
+                'directory' => 'pages/mediatheque',
+            ];
+        }
+
+        if ($id === 'contact') {
+            $fields[] = [
+                'name' => 'image',
+                'path' => '',
+                'label' => 'Image du bandeau (Contact)',
+                'type' => 'image',
+                'directory' => 'pages/contact',
             ];
         }
 
@@ -479,6 +537,10 @@ final class PlatformPages
             'eyebrow' => 'Surtitre',
             'title' => 'Titre',
             'lede' => 'Introduction',
+            'name' => 'Nom du mouvement',
+            'arabicName' => 'Nom en arabe',
+            'place' => 'Sous-titre',
+            'wordmark' => 'Mot-symbole',
             'about' => 'Présentation',
             'founderEyebrow' => 'Surtitre du fondateur',
             'founderTitle' => 'Titre du fondateur',
@@ -495,6 +557,24 @@ final class PlatformPages
             'partnersLede' => 'Texte des partenaires',
             'missionsTitle' => 'Titre des missions',
             'missionsLede' => 'Texte des missions',
+            'listTitle' => 'Titre de la liste',
+            'empty' => 'Message liste vide',
+            'donateEyebrow' => 'Dons — surtitre',
+            'donateTitle' => 'Dons — titre',
+            'donateLede' => 'Dons — texte',
+            'sectionsTitle' => 'Titre des sections',
+            'sidebarEyebrow' => 'Encadré chat — surtitre',
+            'sidebarTitle' => 'Encadré chat — titre',
+            'sidebarLede' => 'Encadré chat — texte',
+            'aboutTitle' => 'Titre « Comment ça marche »',
+            'noMatch' => 'Message aucun résultat',
+            'searchPlaceholder' => 'Placeholder recherche',
+            'infoTitle' => 'Coordonnées — titre',
+            'infoLede' => 'Coordonnées — texte',
+            'hours' => 'Horaires',
+            'formTitle' => 'Formulaire — titre',
+            'formLede' => 'Formulaire — texte',
+            'openMap' => 'Bouton carte',
         ];
     }
 
@@ -503,6 +583,44 @@ final class PlatformPages
      */
     private static function extraFields(string $id): array
     {
+        if ($id === 'home') {
+            return [
+                self::textField('door_about', 'splash.about.title', 'Bouton — Accueil / À propos'),
+                self::textField('door_events', 'splash.events.title', 'Bouton — Événements'),
+                self::textField('door_community', 'splash.community.title', 'Bouton — Communauté'),
+                self::textField('door_media', 'splash.media.title', 'Bouton — Médiathèque'),
+                self::textField('introTitle', 'pages.accueil.introTitle', 'Accueil — titre À propos'),
+                self::textField('introLede', 'pages.accueil.introLede', 'Accueil — texte À propos'),
+                self::textField('introMore', 'pages.accueil.introMore', 'Accueil — bouton Objectifs'),
+                [
+                    'name' => 'points',
+                    'path' => 'pages.accueil.points',
+                    'label' => 'Accueil — points À propos',
+                    'type' => 'points',
+                ],
+                self::textField('founderEyebrow', 'pages.accueil.founderEyebrow', 'Accueil — surtitre fondateur'),
+                self::textField('founderTitle', 'pages.accueil.founderTitle', 'Accueil — titre fondateur'),
+                self::textField('founderP1', 'pages.accueil.founderP1', 'Accueil — fondateur §1'),
+                self::textField('founderP2', 'pages.accueil.founderP2', 'Accueil — fondateur §2'),
+                self::textField('founderP3', 'pages.accueil.founderP3', 'Accueil — fondateur §3'),
+                self::textField('founderName', 'pages.accueil.founderName', 'Accueil — nom du fondateur'),
+                self::textField('founderLine', 'pages.accueil.founderLine', 'Accueil — ligne sous le nom'),
+                self::textField('aimsTitle', 'pages.accueil.aimsTitle', 'Accueil — titre Objectifs'),
+                self::textField('aimsLede', 'pages.accueil.aimsLede', 'Accueil — intro Objectifs'),
+                self::textField('aim1Title', 'pages.accueil.aim1Title', 'Objectif 1 — titre'),
+                self::textField('aim1Text', 'pages.accueil.aim1Text', 'Objectif 1 — texte'),
+                self::textField('aim2Title', 'pages.accueil.aim2Title', 'Objectif 2 — titre'),
+                self::textField('aim2Text', 'pages.accueil.aim2Text', 'Objectif 2 — texte'),
+                self::textField('aim3Title', 'pages.accueil.aim3Title', 'Objectif 3 — titre'),
+                self::textField('aim3Text', 'pages.accueil.aim3Text', 'Objectif 3 — texte'),
+                self::textField('aim4Title', 'pages.accueil.aim4Title', 'Objectif 4 — titre'),
+                self::textField('aim4Text', 'pages.accueil.aim4Text', 'Objectif 4 — texte'),
+                self::textField('testimonialsTitle', 'pages.accueil.testimonialsTitle', 'Accueil — titre Témoignages'),
+                self::textField('testimonialsLede', 'pages.accueil.testimonialsLede', 'Accueil — intro Témoignages'),
+                self::textField('partnersTitle', 'pages.accueil.partnersTitle', 'Accueil — titre Partenaires'),
+            ];
+        }
+
         if ($id === 'zawiya') {
             return [
                 self::linkedField('prayers', 'lede', 'Horaires — introduction', 'textarea'),
@@ -563,7 +681,7 @@ final class PlatformPages
      */
     private static function textField(string $name, string $path, string $label): array
     {
-        $long = in_array($name, ['lede', 'about'], true)
+        $long = in_array($name, ['lede', 'lead', 'about'], true)
             || str_starts_with($name, 'founderP')
             || str_ends_with($name, 'Text')
             || str_ends_with($name, 'Lede')

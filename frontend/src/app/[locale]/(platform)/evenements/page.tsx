@@ -3,7 +3,10 @@ import { getTranslations } from "next-intl/server";
 
 import { PageHeading } from "@/components/layout/page-heading";
 import { EventBoard } from "@/components/mosque/event-board";
-import { jiloulEvents } from "@/lib/jiloul-events";
+import { loadEvents } from "@/lib/events-api";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata({
   params,
@@ -18,20 +21,14 @@ export async function generateMetadata({
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations("pages.events");
-  const events = jiloulEvents(locale);
+  const events = await loadEvents(locale);
 
   return (
     <article>
       <PageHeading
         eyebrow={t("eyebrow")}
         title={t("title")}
-        lede={
-          locale === "en"
-            ? "The days, circles and gatherings announced by the movement."
-            : locale === "ar"
-              ? "الأيام والحلقات والمواعيد التي أعلنتها الحركة."
-              : "Les journées, les cercles et les rendez-vous annoncés par le mouvement."
-        }
+        lede={t("lede")}
         image="/brand/slide-centre.jpg"
       />
       <div className="bg-[#f3f4f6]">

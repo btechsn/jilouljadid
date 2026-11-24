@@ -14,62 +14,61 @@ class AnnouncementSeeder extends Seeder
 {
     public function run(): void
     {
+        Announcement::query()->delete();
+
         $examples = [
             [
-                'key' => 'inscriptions-2026',
-                'category' => AnnouncementCategory::CENTER,
-                'priority' => AnnouncementPriority::HIGH,
-                'action_url' => '/academique/inscription',
-                'title' => [
-                    'fr' => 'Inscriptions 2026-2027',
-                    'en' => 'Enrolment 2026-2027',
-                    'ar' => 'تسجيلات 2026-2027',
-                ],
-                'message' => [
-                    'fr' => 'Les inscriptions de l\'année 2026-2027 sont ouvertes au Jiloul Jadid.',
-                    'en' => 'Enrolment for 2026-2027 is open at Jiloul Jadid.',
-                    'ar' => 'تسجيلات العام 2026-2027 مفتوحة في الجيل الجديد.',
-                ],
-            ],
-            [
-                'key' => 'prieres-du-jour',
-                'category' => AnnouncementCategory::CENTER,
-                'priority' => AnnouncementPriority::NORMAL,
-                'action_url' => '/mosque/prayer-times',
-                'title' => [
-                    'fr' => 'Horaires de prière',
-                    'en' => 'Prayer times',
-                    'ar' => 'مواقيت الصلاة',
-                ],
-                'message' => [
-                    'fr' => 'Les horaires des cinq prières du jour sont affichés pour la mosquée, à Dakar.',
-                    'en' => 'Today\'s five prayer times are posted for the mosque, in Dakar.',
-                    'ar' => 'مواقيت الصلوات الخمس لهذا اليوم معروضة لمسجد دكار.',
-                ],
-            ],
-            [
-                'key' => 'khutba-vendredi',
+                'key' => 'imam-day-2027',
                 'category' => AnnouncementCategory::EVENT,
-                'priority' => AnnouncementPriority::NORMAL,
-                'action_url' => '/centre/khutbas',
+                'priority' => AnnouncementPriority::HIGH,
+                'action_url' => '/fr/evenements/imam-day',
                 'title' => [
-                    'fr' => 'Khutba du vendredi',
-                    'en' => 'Friday khutba',
-                    'ar' => 'خطبة الجمعة',
+                    'fr' => 'Imam Day — 24 janvier 2027',
+                    'en' => 'Imam Day — 24 January 2027',
+                    'ar' => 'يوم الإمام — 24 يناير 2027',
                 ],
                 'message' => [
-                    'fr' => 'La khutba du vendredi peut être relue après la prière.',
-                    'en' => 'The Friday khutba can be read again after the prayer.',
-                    'ar' => 'يمكن إعادة قراءة خطبة الجمعة بعد الصلاة.',
+                    'fr' => 'Rendez-vous à l’Hôtel King Fahd Palace, Dakar, pour la Journée internationale de l’Imam Cheikh Tidiane Cissé.',
+                    'en' => 'Join us at the King Fahd Palace Hotel, Dakar, for the International Day of Imam Cheikh Tidiane Cissé.',
+                    'ar' => 'الموعد بفندق قصر الملك فهد في دكار لليوم الدولي للإمام الشيخ تجاني سيسي.',
+                ],
+            ],
+            [
+                'key' => 'rejoindre-mouvement',
+                'category' => AnnouncementCategory::CENTER,
+                'priority' => AnnouncementPriority::NORMAL,
+                'action_url' => '/fr/rejoindre',
+                'title' => [
+                    'fr' => 'Rejoindre le mouvement',
+                    'en' => 'Join the movement',
+                    'ar' => 'الانضمام إلى الحركة',
+                ],
+                'message' => [
+                    'fr' => 'Jeunesse, transmission, service et unité de la Fayda : choisissez votre section.',
+                    'en' => 'Youth, transmission, service and Fayda unity: choose your section.',
+                    'ar' => 'الشباب والنقل والخدمة ووحدة الفيضة: اختر قسمك.',
+                ],
+            ],
+            [
+                'key' => 'soutenir',
+                'category' => AnnouncementCategory::CENTER,
+                'priority' => AnnouncementPriority::NORMAL,
+                'action_url' => '/fr/soutien',
+                'title' => [
+                    'fr' => 'Soutenir Jiloul Jadid',
+                    'en' => 'Support Jiloul Jadid',
+                    'ar' => 'دعم الجيل الجديد',
+                ],
+                'message' => [
+                    'fr' => 'Votre contribution aide le mouvement à accompagner la nouvelle génération.',
+                    'en' => 'Your contribution helps the movement accompany the new generation.',
+                    'ar' => 'مساهمتك تساعد الحركة على مواكبة الجيل الجديد.',
                 ],
             ],
         ];
 
         foreach ($examples as $example) {
-            $announcement = Announcement::query()
-                ->where('metadata->example', $example['key'])
-                ->first() ?? new Announcement();
-
+            $announcement = new Announcement();
             $announcement->setTranslations('title', $example['title']);
             $announcement->setTranslations('message', $example['message']);
             $announcement->category = $example['category'];
@@ -77,12 +76,15 @@ class AnnouncementSeeder extends Seeder
             $announcement->is_active = true;
             $announcement->action_url = $example['action_url'];
             $announcement->metadata = ['example' => $example['key']];
+            $announcement->starts_at = now()->subDay();
             $announcement->save();
 
-            $announcement->audiences()->firstOrCreate([
+            $announcement->audiences()->create([
                 'type' => AudienceType::PUBLIC,
                 'target_id' => null,
             ]);
         }
+
+        $this->command?->info('✅ Annonces Jiloul Jadid.');
     }
 }

@@ -7,9 +7,11 @@ import { useLocale, useTranslations } from "next-intl";
 import { EightPointStar } from "@/components/brand/ornaments";
 import { PageHeading } from "@/components/layout/page-heading";
 import { useMediaGallery, type GalleryMediaItem } from "@/hooks/useMediaGallery";
+import { toPublicMediaUrl } from "@/lib/media";
 import { cn } from "@/lib/utils";
 
 const PER_PAGE = 48;
+const MEDIA_HERO_FALLBACK = "/brand/slide-actualites.jpg";
 
 /** Photos locales du mouvement quand l’API galerie est vide. */
 const LOCAL_MEDIA: GalleryMediaItem[] = [
@@ -114,6 +116,7 @@ export function MediaBoard() {
   const [page, setPage] = useState(1);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [slideScope, setSlideScope] = useState<GalleryMediaItem[]>([]);
+  const [heroImage, setHeroImage] = useState(MEDIA_HERO_FALLBACK);
 
   const { data: apiData, isLoading, meta } = useMediaGallery({
     kind: kind || undefined,
@@ -121,6 +124,23 @@ export function MediaBoard() {
     page,
     perPage: PER_PAGE,
   });
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { loadSiteSettings } = await import("@/lib/site-settings");
+        const settings = await loadSiteSettings();
+        if (cancelled) return;
+        setHeroImage(toPublicMediaUrl(settings.mediaImageUrl, MEDIA_HERO_FALLBACK));
+      } catch {
+        /* garde le fallback */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const data = useMemo(() => {
     if (apiData.length > 0) return apiData;
@@ -173,7 +193,7 @@ export function MediaBoard() {
         eyebrow={pages("eyebrow")}
         title={pages("title")}
         lede={pages("lede")}
-        image="/brand/slide-actualites.jpg"
+        image={heroImage}
       />
 
       <section className="bg-[#f3f4f6]">
@@ -201,7 +221,7 @@ export function MediaBoard() {
               <input
                 value={draft}
                 onChange={(event) => setDraft(event.target.value)}
-                placeholder={t("searchPlaceholder")}
+                placeholder={pages("searchPlaceholder")}
                 aria-label={t("search")}
                 className="h-11 w-full rounded-full border-0 bg-white px-4 text-sm text-content shadow-sm ring-1 ring-black/5 outline-none focus:ring-2 focus:ring-gold-300/60"
               />
@@ -222,7 +242,7 @@ export function MediaBoard() {
             </div>
           ) : groups.length === 0 ? (
             <p className="mt-8 rounded-2xl bg-white p-6 text-sm text-content-secondary">
-              {q || kind ? t("noMatch") : t("empty")}
+              {q || kind ? pages("noMatch") : pages("empty")}
             </p>
           ) : (
             <>

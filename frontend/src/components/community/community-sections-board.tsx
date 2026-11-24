@@ -13,7 +13,10 @@ import {
   stripeDonateHref,
   walletDonateHref,
 } from "@/lib/donation-links";
+import { toPublicMediaUrl } from "@/lib/media";
 import { cn } from "@/lib/utils";
+
+const COMMUNITY_HERO_FALLBACK = "/brand/intro-lecon.jpg";
 
 export type CommunitySection = {
   id: string;
@@ -154,9 +157,27 @@ export function CommunitySectionsBoard() {
   const [query, setQuery] = useState("");
   const [joinSection, setJoinSection] = useState<CommunitySection | null>(null);
   const [membership, setMembership] = useState<Record<string, MembershipStatus>>({});
+  const [heroImage, setHeroImage] = useState(COMMUNITY_HERO_FALLBACK);
 
   useEffect(() => {
     setMembership(readMembership());
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { loadSiteSettings } = await import("@/lib/site-settings");
+        const settings = await loadSiteSettings();
+        if (cancelled) return;
+        setHeroImage(toPublicMediaUrl(settings.communityImageUrl, COMMUNITY_HERO_FALLBACK));
+      } catch {
+        /* garde le fallback */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const sections = useMemo(() => {
@@ -183,10 +204,11 @@ export function CommunitySectionsBoard() {
     <article>
       <section className="relative isolate overflow-hidden bg-brand-950 text-white">
         <Image
-          src="/brand/intro-lecon.jpg"
+          src={heroImage}
           alt=""
           fill
           priority
+          unoptimized={heroImage.startsWith("/storage/") || /^https?:\/\//i.test(heroImage)}
           sizes="100vw"
           className="object-cover object-center"
         />
@@ -209,9 +231,9 @@ export function CommunitySectionsBoard() {
       <div className="bg-[#f3f4f6]">
         <div className="nh-container py-10 sm:py-12">
           <section className="mb-8 overflow-hidden rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-wide text-gold-600">{t("donateEyebrow")}</p>
-            <h2 className="mt-2 font-sans text-2xl font-extrabold text-content">{t("donateTitle")}</h2>
-            <p className="mt-2 max-w-2xl text-sm text-content-secondary">{t("donateLede")}</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-gold-600">{pages("donateEyebrow")}</p>
+            <h2 className="mt-2 font-sans text-2xl font-extrabold text-content">{pages("donateTitle")}</h2>
+            <p className="mt-2 max-w-2xl text-sm text-content-secondary">{pages("donateLede")}</p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <DonateLink
                 href={stripeDonateHref(locale)}
@@ -240,7 +262,7 @@ export function CommunitySectionsBoard() {
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_19rem]">
             <div className="min-w-0 space-y-6">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <h2 className="font-sans text-lg font-extrabold text-content">{t("sectionsTitle")}</h2>
+                <h2 className="font-sans text-lg font-extrabold text-content">{pages("sectionsTitle")}</h2>
                 <label className="block w-full sm:max-w-xs">
                   <span className="sr-only">{t("search")}</span>
                   <input
@@ -317,9 +339,9 @@ export function CommunitySectionsBoard() {
 
             <aside className="h-fit space-y-5 lg:sticky lg:top-24">
               <section className="overflow-hidden rounded-2xl bg-brand-800 p-5 text-white shadow-sm">
-                <p className="text-xs font-semibold uppercase tracking-wide text-gold-300">{t("sidebarEyebrow")}</p>
-                <h2 className="mt-2 font-sans text-lg font-extrabold leading-snug text-white">{t("sidebarTitle")}</h2>
-                <p className="mt-3 text-sm leading-relaxed text-white/80">{t("sidebarLede")}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gold-300">{pages("sidebarEyebrow")}</p>
+                <h2 className="mt-2 font-sans text-lg font-extrabold leading-snug text-white">{pages("sidebarTitle")}</h2>
+                <p className="mt-3 text-sm leading-relaxed text-white/80">{pages("sidebarLede")}</p>
                 <Link
                   href={user ? `/${locale}/communaute/discussions` : `/${locale}/compte/connexion`}
                   className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-full bg-gold-300 text-xs font-semibold uppercase tracking-wide text-brand-950 hover:bg-gold-200"
@@ -329,9 +351,9 @@ export function CommunitySectionsBoard() {
               </section>
 
               <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5">
-                <p className="text-xs font-semibold uppercase tracking-wide text-gold-600">{t("donateEyebrow")}</p>
-                <h2 className="mt-2 font-sans text-base font-extrabold text-content">{t("donateTitle")}</h2>
-                <p className="mt-2 text-sm text-content-secondary">{t("donateLede")}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gold-600">{pages("donateEyebrow")}</p>
+                <h2 className="mt-2 font-sans text-base font-extrabold text-content">{pages("donateTitle")}</h2>
+                <p className="mt-2 text-sm text-content-secondary">{pages("donateLede")}</p>
                 <div className="mt-4 space-y-2">
                   <DonateLink href={stripeDonateHref(locale)} label={t("donateStripe")} tone="brand" full />
                   <DonateLink href={paypalDonateHref(locale)} label={t("donatePaypal")} tone="brand" full />
@@ -340,7 +362,7 @@ export function CommunitySectionsBoard() {
               </section>
 
               <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5">
-                <h2 className="font-sans text-base font-extrabold text-content">{t("aboutTitle")}</h2>
+                <h2 className="font-sans text-base font-extrabold text-content">{pages("aboutTitle")}</h2>
                 <ul className="mt-4 space-y-2.5">
                   {(pages.raw("points") as string[]).map((point) => (
                     <li key={point} className="flex gap-2 text-sm text-content-secondary">

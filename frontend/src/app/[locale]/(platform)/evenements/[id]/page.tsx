@@ -4,10 +4,18 @@ import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 
 import { EventDetail } from "@/components/mosque/event-detail";
-import { getJiloulEvent, jiloulEvents } from "@/lib/jiloul-events";
+import { loadEvent, loadEvents } from "@/lib/events-api";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateStaticParams() {
-  return jiloulEvents("fr").map((event) => ({ id: event.id }));
+  try {
+    const events = await loadEvents("fr");
+    return events.map((event) => ({ id: event.id }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({
@@ -16,7 +24,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; id: string }>;
 }): Promise<Metadata> {
   const { locale, id } = await params;
-  const event = getJiloulEvent(locale, id);
+  const event = await loadEvent(locale, id);
   if (!event) {
     const t = await getTranslations({ locale, namespace: "pages.events" });
     return { title: t("title") };
@@ -30,7 +38,7 @@ export default async function EventDetailPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
-  const event = getJiloulEvent(locale, id);
+  const event = await loadEvent(locale, id);
   const t = await getTranslations({ locale, namespace: "pages.events" });
 
   if (!event) {

@@ -1243,8 +1243,8 @@
     "label": "Navigation",
     "brand": "Jiloul Jadid",
     "quranic": "La Nouvelle Génération",
-    "footer": "Institut franco-anglo-arabe · Dakar",
-    "footerBlurb": "Institut franco-anglo-arabe à Dakar. Le Coran, la langue arabe, les sciences islamiques et les œuvres de Cheikh Ibrahim Niasse.",
+    "footer": "Mouvement de jeunesse · Dakar",
+    "footerBlurb": "Mouvement de jeunesse fondé par Seydina Aliou Cissé, fils de l’Imam Cheikh Tidiane Cissé. Ensemble pour le bien.",
     "footerUseful": "Liens utiles",
     "footerOther": "Autres liens",
     "footerContact": "Nous contacter",
@@ -1319,6 +1319,37 @@
     }
   },
   "pages": {
+    "accueil": {
+      "introTitle": "La Nouvelle Génération",
+      "introLede": "Ce mouvement de jeunesse béni a pour vocation de sensibiliser les jeunes, de purifier les âmes et d’y inculquer les vertus et les bonnes valeurs.",
+      "introMore": "Les objectifs",
+      "points": [
+        "Fondé par Seydina Aliou Cissé, fils de l’Imam Cheikh Tidiane Cissé, qu’Allah soit satisfait de lui.",
+        "Service, transmission et nouvelles générations.",
+        "Ensemble pour le bien."
+      ],
+      "founderEyebrow": "À propos",
+      "founderTitle": "Mot du fondateur",
+      "founderP1": "Ce mouvement de jeunesse béni a pour vocation de sensibiliser les jeunes, de purifier les âmes et d’y inculquer les vertus et les bonnes valeurs.",
+      "founderP2": "« Celui qui veut être avec moi, qu’il suive ma voie dans ses paroles et dans ses actes. »",
+      "founderP3": "« J’aspire à l’agrément du Seigneur afin de soutenir Sa religion, et de présenter un modèle exemplaire à la nouvelle génération. »",
+      "founderName": "Seydina Aliou Cissé",
+      "founderLine": "Fils de l’Imam Cheikh Tidiane Cissé",
+      "aimsTitle": "Objectifs généraux",
+      "aimsLede": "Les objectifs généraux du mouvement se résument comme suit.",
+      "aim1Title": "Connaissance mutuelle et fraternité",
+      "aim1Text": "Promouvoir la connaissance mutuelle et le rapprochement entre les peuples, tout en renforçant le sentiment d’appartenance à la grande fraternité islamique.",
+      "aim2Title": "Patrimoine et voie du Cheikh",
+      "aim2Text": "Préserver le patrimoine islamique à travers la sagesse et la bonne exhortation, en s’attachant à la voie du Cheikh, qu’Allah soit satisfait de lui, et en étudiant ses enseignements.",
+      "aim3Title": "L’époque et les principes immuables",
+      "aim3Text": "S’adapter aux évolutions et aux exigences de l’époque, tout en demeurant fermement attaché aux principes fondamentaux et aux valeurs immuables.",
+      "aim4Title": "Unité de la Fayda",
+      "aim4Text": "Rejeter les divisions et les conflits entre les membres de la Fayda, et œuvrer à l’unité, au rapprochement et à l’unification des rangs.",
+      "testimonialsTitle": "Témoignages",
+      "testimonialsLede": "Ce que disent celles et ceux qui marchent avec le mouvement.",
+      "partnersTitle": "Partenaires",
+      "communiqueLabel": "Communiqué"
+    },
     "prayers": { "lede": "Les cinq prières du jour, et l'iqama annoncée pour la mosquée." },
     "programs": {
       "eyebrow": "Parcours",
@@ -1517,14 +1548,11 @@
       ]
     },
     "live": {
-      "eyebrow": "Studio",
-      "title": "En direct",
-      "lede": "Les cours, les prières et les rencontres diffusés quand le studio est ouvert.",
-      "points": [
-        "Le direct s'ouvre lorsque le studio émet.",
-        "Le tchat accompagne la séance en cours.",
-        "Sans émission, la page reste au calme."
-      ]
+      "eyebrow": "Réseaux",
+      "title": "Directs sociaux",
+      "lede": "Accédez rapidement à nos chaînes et pages. Le lecteur affiche le direct dès qu’une séance est lancée.",
+      "listTitle": "Les futurs directs",
+      "empty": "Aucun direct à venir pour le moment."
     },
     "replay": {
       "eyebrow": "Archives",
@@ -1564,7 +1592,10 @@
         "Photos et vidéos publiques du mouvement.",
         "Filtrez par photos ou vidéos.",
         "Recherchez par nom d'événement."
-      ]
+      ],
+      "empty": "Aucun média publié pour le moment.",
+      "noMatch": "Aucun média pour cette recherche.",
+      "searchPlaceholder": "Rechercher par nom d'événement…"
     },
     "daily": {
       "eyebrow": "Rappel",
@@ -1614,7 +1645,15 @@
         "Choisissez une section et envoyez une demande.",
         "Le secrétariat accepte ou refuse la demande.",
         "Après acceptation, connectez-vous pour tchatter avec les membres."
-      ]
+      ],
+      "donateEyebrow": "Soutien",
+      "donateTitle": "Faire un don",
+      "donateLede": "Soutenez le mouvement via Stripe, PayPal, Wave ou Orange Money.",
+      "sectionsTitle": "Les sections",
+      "sidebarEyebrow": "Après acceptation",
+      "sidebarTitle": "Tchatter en se connectant",
+      "sidebarLede": "Demandez à rejoindre une section. Une fois accepté, connectez-vous pour échanger avec les membres.",
+      "aboutTitle": "Comment ça marche"
     },
     "location": {
       "title": "Localisation",
@@ -1656,6 +1695,12 @@
       "eyebrow": "Dakar",
       "title": "Contact",
       "lede": "Écrire au secrétariat du Jiloul Jadid, à Dakar.",
+      "infoTitle": "Coordonnées",
+      "infoLede": "Le secrétariat répond aux inscriptions, aux questions sur les programmes et à la vie du centre.",
+      "hours": "Lundi – Vendredi, 9h00 – 18h00 (Dakar)",
+      "formTitle": "Envoyer un message",
+      "formLede": "Remplissez le formulaire : le secrétariat vous répond sous 24 heures.",
+      "openMap": "Ouvrir la carte",
       "points": [
         "Institut franco-anglo-arabe.",
         "Dakar, Sénégal.",

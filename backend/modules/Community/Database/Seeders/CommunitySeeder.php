@@ -17,7 +17,8 @@ class CommunitySeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::query()->where('email', 'admin@nujumalhuda.com')->first()
+        $admin = User::query()->where('email', 'admin@jilouljadid.com')->first()
+            ?? User::query()->where('email', 'admin@nujumalhuda.com')->first()
             ?? User::query()->first();
 
         if (!$admin) {
@@ -26,62 +27,50 @@ class CommunitySeeder extends Seeder
             return;
         }
 
+        CommunityEvent::query()->delete();
+
         $questions = [
             [
-                'slug_key' => 'tarawih',
+                'slug_key' => 'rejoindre-section',
                 'question_i18n' => [
-                    'fr' => 'Comment organiser les tarawih en famille quand on ne peut pas venir à la mosquée ?',
-                    'en' => 'How can we organise tarawih at home when we cannot come to the mosque?',
-                    'ar' => 'كيف ننظم التراويح في البيت إن تعذّر المجيء إلى المسجد؟',
+                    'fr' => 'Comment rejoindre une section du mouvement ?',
+                    'en' => 'How do I join a section of the movement?',
+                    'ar' => 'كيف أنضم إلى قسم من الحركة؟',
                 ],
                 'answer_i18n' => [
-                    'fr' => 'On peut prier en groupe à la maison, avec un imam de la famille, en gardant la simplicité et la présence du cœur.',
-                    'en' => 'You may pray as a household group, with a family imam, keeping simplicity and presence of heart.',
-                    'ar' => 'يُصلّى جماعة في البيت بإمام من الأهل، مع اليسر وحضور القلب.',
+                    'fr' => 'Rendez-vous sur la page Communauté, choisissez une section (Jeunesse, Transmission, Service ou Unité) et envoyez votre demande.',
+                    'en' => 'Go to the Community page, choose a section (Youth, Transmission, Service or Unity) and send your request.',
+                    'ar' => 'اذهب إلى صفحة الجماعة، اختر قسماً وأرسل طلبك.',
                 ],
-                'topics' => ['ramadan', 'priere', 'famille'],
+                'topics' => ['sections', 'communaute'],
             ],
             [
-                'slug_key' => 'zakat-fitr',
+                'slug_key' => 'imam-day',
                 'question_i18n' => [
-                    'fr' => 'Qui doit verser la zakat al-fitr dans un foyer, et avant quel moment ?',
-                    'en' => 'Who must pay zakat al-fitr in a household, and before when?',
-                    'ar' => 'من تؤدّى عنه زكاة الفطر في البيت، ومتى؟',
+                    'fr' => 'Quand a lieu l’Imam Day ?',
+                    'en' => 'When is Imam Day?',
+                    'ar' => 'متى يوم الإمام؟',
                 ],
                 'answer_i18n' => [
-                    'fr' => 'Le chef de famille pour lui-même et ceux à sa charge, avant la prière de l’Aïd, selon le barème du muud annoncé.',
-                    'en' => 'The head of household for himself and his dependents, before the Eid prayer, according to the announced mudd rate.',
-                    'ar' => 'ربّ الأسرة عن نفسه وعمن يعول، قبل صلاة العيد، وفق المدّ المعلن.',
+                    'fr' => 'Le 24 janvier 2027 à l’Hôtel King Fahd Palace, Dakar. Les détails sont sur la page Événements.',
+                    'en' => '24 January 2027 at the King Fahd Palace Hotel, Dakar. Details are on the Events page.',
+                    'ar' => '24 يناير 2027 بفندق قصر الملك فهد في دكار. التفاصيل في صفحة الفعاليات.',
                 ],
-                'topics' => ['zakat', 'ramadan', 'fiqh'],
+                'topics' => ['evenements'],
             ],
             [
-                'slug_key' => 'inscription',
+                'slug_key' => 'soutien',
                 'question_i18n' => [
-                    'fr' => 'Quels documents faut-il pour inscrire un enfant aux programmes du centre ?',
-                    'en' => 'Which documents are needed to enrol a child in the centre’s programmes?',
-                    'ar' => 'ما الوثائق اللازمة لتسجيل طفل في برامج المركز؟',
+                    'fr' => 'Comment soutenir Jiloul Jadid ?',
+                    'en' => 'How can I support Jiloul Jadid?',
+                    'ar' => 'كيف أدعم الجيل الجديد؟',
                 ],
                 'answer_i18n' => [
-                    'fr' => 'Une pièce d’identité du tuteur, l’acte de naissance de l’enfant, et le formulaire d’inscription en ligne ou au secrétariat.',
-                    'en' => 'A guardian ID, the child’s birth certificate, and the enrolment form online or at the office.',
-                    'ar' => 'هوية الولي وشهادة ميلاد الطفل واستمارة التسجيل عبر الإنترنت أو في الأمانة.',
+                    'fr' => 'Via la page Soutien : Wave, Orange Money, Stripe ou PayPal selon votre situation.',
+                    'en' => 'Via the Support page: Wave, Orange Money, Stripe or PayPal as available.',
+                    'ar' => 'عبر صفحة الدعم: Wave أو Orange Money أو Stripe أو PayPal.',
                 ],
-                'topics' => ['inscription', 'famille', 'programmes'],
-            ],
-            [
-                'slug_key' => 'dahira',
-                'question_i18n' => [
-                    'fr' => 'Comment rejoindre le dahira du centre et participer aux cotisations ?',
-                    'en' => 'How do I join the centre’s dahira and take part in contributions?',
-                    'ar' => 'كيف أنضم إلى دائرة المركز وأشارك في الاشتراكات؟',
-                ],
-                'answer_i18n' => [
-                    'fr' => 'Demandez l’adhésion via la page Dahira ; un responsable valide votre demande, puis les échéances de cotisation apparaissent.',
-                    'en' => 'Request membership on the Dahira page; an officer validates it, then contribution schedules appear.',
-                    'ar' => 'اطلب الانضمام عبر صفحة الدائرة؛ يوافق مسؤول ثم تظهر جداول الاشتراك.',
-                ],
-                'topics' => ['dahira', 'communaute'],
+                'topics' => ['soutien'],
             ],
         ];
 
@@ -114,81 +103,52 @@ class CommunitySeeder extends Seeder
             }
         }
 
-        $eventTitle = 'Hadara Jumma';
-        $legacyTitle = 'Majlis du vendredi — familles';
-        $event = CommunityEvent::query()
-            ->where(function ($query) use ($eventTitle, $legacyTitle) {
-                $query->where('title_i18n->fr', $eventTitle)
-                    ->orWhere('title_i18n->fr', $legacyTitle);
-            })
-            ->first();
-        $eventPayload = [
-            'title_i18n' => [
-                'fr' => $eventTitle,
-                'en' => 'Hadara Jumma',
-                'ar' => 'حضرة الجمعة',
-            ],
-            'description_i18n' => [
-                'fr' => 'Hadara Jumma chaque vendredi à la zawiya : rappel, dhikr et rencontre de la communauté.',
-                'en' => 'Hadara Jumma every Friday at the zawiya: reminder, dhikr and community gathering.',
-                'ar' => 'حضرة الجمعة كل جمعة في الزاوية: تذكير وذكر ولقاء للمجتمع.',
-            ],
-            'starts_at' => now()->next('Friday')->setTime(15, 30),
-            'ends_at' => now()->next('Friday')->setTime(17, 0),
-            'location' => 'Zawiya Jiloul Jadid',
-            'capacity' => 120,
-            'is_published' => true,
-        ];
-        if ($event) {
-            $event->update($eventPayload);
-        } else {
-            CommunityEvent::create($eventPayload);
-        }
+        Testimonial::query()->delete();
 
         foreach ([
             [
                 'author_name' => 'Aïssatou Ndiaye',
-                'relation' => 'parent',
+                'relation' => 'member',
                 'content_i18n' => [
-                    'fr' => 'Nos enfants ont trouvé un cadre sérieux et bienveillant. La communauté du centre nous accompagne vraiment.',
-                    'en' => 'Our children found a serious and caring setting. The centre’s community truly walks with us.',
-                    'ar' => 'وجد أولادنا إطاراً جادّاً رحيماً. مجتمع المركز يرافقنا حقاً.',
+                    'fr' => 'La section Jeunesse m’a permis de rencontrer des frères et sœurs engagés dans la même voie.',
+                    'en' => 'The Youth section helped me meet brothers and sisters committed to the same path.',
+                    'ar' => 'قسم الشباب أتاح لي لقاء إخوة وأخوات على نفس الطريق.',
                 ],
             ],
             [
                 'author_name' => 'Moussa Fall',
-                'relation' => 'student',
+                'relation' => 'member',
                 'content_i18n' => [
-                    'fr' => 'Les discussions et le dahira m’ont aidé à rester lié au centre, même hors des cours.',
-                    'en' => 'Discussions and the dahira helped me stay linked to the centre beyond classes.',
-                    'ar' => 'النقاشات والدائرة أعاناني على الارتباط بالمركز خارج الدروس.',
+                    'fr' => 'Les sections et les événements du mouvement m’ont aidé à rester lié, même hors de Dakar.',
+                    'en' => 'The sections and events of the movement helped me stay connected, even outside Dakar.',
+                    'ar' => 'أقسام الحركة وفعالياتها أعانتني على البقاء مرتبطاً حتى خارج دكار.',
                 ],
             ],
             [
                 'author_name' => 'Fatou Ba',
-                'relation' => 'alumni',
+                'relation' => 'member',
                 'content_i18n' => [
-                    'fr' => 'J’ai appris le Coran ici, et je reviens encore pour les khutbas et la communauté. Le centre reste ma maison.',
-                    'en' => 'I learned the Quran here, and I still come back for khutbas and community. The centre remains my home.',
-                    'ar' => 'تعلّمت القرآن هنا، وما زلت أعود للخطب والمجتمع. المركز بيتي.',
+                    'fr' => 'Imam Day et les journées du mouvement renforcent l’unité de la Fayda autour de Seydina Aliou Cissé.',
+                    'en' => 'Imam Day and the movement’s gatherings strengthen Fayda unity around Seydina Aliou Cissé.',
+                    'ar' => 'يوم الإمام ولقاءات الحركة تعزّز وحدة الفيضة حول سيدنا عليو سيسي.',
                 ],
             ],
             [
                 'author_name' => 'Ibrahima Diop',
-                'relation' => 'parent',
+                'relation' => 'member',
                 'content_i18n' => [
-                    'fr' => 'Les enseignants sont disponibles et les horaires clairs. On sent un vrai suivi pour chaque élève.',
-                    'en' => 'The teachers are available and the schedule is clear. You feel real follow-up for every student.',
-                    'ar' => 'المدرّسون متاحون والجداول واضحة. نحسّ بمتابعة حقيقية لكل تلميذ.',
+                    'fr' => 'La section Service nous pousse à agir concrètement pour les nouvelles générations.',
+                    'en' => 'The Service section pushes us to act concretely for the new generations.',
+                    'ar' => 'قسم الخدمة يدفعنا للعمل الملموس من أجل الأجيال الجديدة.',
                 ],
             ],
             [
                 'author_name' => 'Marième Sarr',
                 'relation' => 'member',
                 'content_i18n' => [
-                    'fr' => 'La zawiya et les directs nous relient à la vie du centre, même quand on ne peut pas venir chaque jour.',
-                    'en' => 'The zawiya and the lives keep us connected to the centre, even when we cannot come every day.',
-                    'ar' => 'الزاوية والبثوث تربطنا بحياة المركز حتى حين لا نستطيع الحضور كل يوم.',
+                    'fr' => 'Les directs et la médiathèque nous relient à la vie du mouvement, même à distance.',
+                    'en' => 'Lives and the media library keep us connected to the movement, even from afar.',
+                    'ar' => 'البث المباشر والمكتبة الإعلامية تربطنا بالحركة حتى عن بعد.',
                 ],
             ],
         ] as $row) {
@@ -202,138 +162,41 @@ class CommunitySeeder extends Seeder
             );
         }
 
+        Partner::query()->delete();
+
         foreach ([
             [
                 'name' => 'Association des Imams du Sénégal',
                 'description_i18n' => [
-                    'fr' => 'Partenaire pour la formation des prédicateurs et l’échange sur les pratiques mosquée.',
-                    'en' => 'Partner for preacher training and exchange on mosque practices.',
-                    'ar' => 'شريك لتكوين الدعاة وتبادل ممارسات المساجد.',
+                    'fr' => 'Partenaire pour la formation et l’échange autour de la voie.',
+                    'en' => 'Partner for training and exchange around the path.',
+                    'ar' => 'شريك للتكوين وتبادل حول الطريق.',
                 ],
-                'website_url' => 'https://example.com/imams',
+                'website_url' => null,
                 'logo_url' => '/brand/slide-priere.jpg',
                 'sort_order' => 1,
             ],
             [
-                'name' => 'Bibliothèque Islamique de Dakar',
+                'name' => 'Collectif des Zawiya de Dakar',
                 'description_i18n' => [
-                    'fr' => 'Accès aux ouvrages et soutien aux ateliers de lecture pour les élèves du centre.',
-                    'en' => 'Book access and support for reading workshops for centre students.',
-                    'ar' => 'الوصول إلى الكتب ودعم ورش القراءة لتلاميذ المركز.',
+                    'fr' => 'Réseau de présence et d’unité autour de la Fayda.',
+                    'en' => 'Network of presence and unity around the Fayda.',
+                    'ar' => 'شبكة حضور ووحدة حول الفيضة.',
                 ],
-                'website_url' => 'https://example.com/bib',
-                'logo_url' => '/brand/slide-academique.jpg',
+                'website_url' => null,
+                'logo_url' => '/brand/slide-zawiya-soir.png',
                 'sort_order' => 2,
-            ],
-            [
-                'name' => 'Radio Fréquence Islam',
-                'description_i18n' => [
-                    'fr' => 'Diffusion ponctuelle des khutbas et annonces du centre.',
-                    'en' => 'Occasional broadcast of the centre’s khutbas and announcements.',
-                    'ar' => 'بثّ عرضي لخطب وإعلانات المركز.',
-                ],
-                'website_url' => 'https://example.com/radio',
-                'logo_url' => '/brand/slide-live.jpg',
-                'sort_order' => 3,
             ],
             [
                 'name' => 'Fondation Éducation & Coran',
                 'description_i18n' => [
-                    'fr' => 'Soutien aux bourses et au matériel pédagogique.',
-                    'en' => 'Support for scholarships and teaching materials.',
-                    'ar' => 'دعم المنح والوسائل التعليمية.',
+                    'fr' => 'Soutien à la transmission et à l’éducation des nouvelles générations.',
+                    'en' => 'Support for transmission and education of new generations.',
+                    'ar' => 'دعم النقل وتعليم الأجيال الجديدة.',
                 ],
-                'website_url' => 'https://example.com/fondation',
+                'website_url' => null,
                 'logo_url' => '/brand/slide-centre.jpg',
-                'sort_order' => 4,
-            ],
-            [
-                'name' => 'Clinique solidaire Sud Foire',
-                'description_i18n' => [
-                    'fr' => 'Actions de santé communautaire avec les dahiras du quartier.',
-                    'en' => 'Community health actions with local dahiras.',
-                    'ar' => 'أعمال صحية مجتمعية مع دوائر الحي.',
-                ],
-                'website_url' => 'https://example.com/sante',
-                'logo_url' => '/brand/slide-actualites.jpg',
-                'sort_order' => 5,
-            ],
-            [
-                'name' => 'Collectif des Zawiya de Dakar',
-                'description_i18n' => [
-                    'fr' => 'Coordination des hadaras et des rendez-vous spirituels partagés.',
-                    'en' => 'Coordination of shared hadaras and spiritual gatherings.',
-                    'ar' => 'تنسيق الحضرات واللقاءات الروحية المشتركة.',
-                ],
-                'website_url' => 'https://example.com/zawaya',
-                'logo_url' => '/brand/slide-zawiya-soir.png',
-                'sort_order' => 6,
-            ],
-            [
-                'name' => 'Institut de Récitation Medina',
-                'description_i18n' => [
-                    'fr' => 'Ateliers de tajwīd et concours de mémorisation.',
-                    'en' => 'Tajwīd workshops and memorization contests.',
-                    'ar' => 'ورش التجويد ومسابقات الحفظ.',
-                ],
-                'website_url' => 'https://example.com/recitation',
-                'logo_url' => '/brand/slide-recitation.jpg',
-                'sort_order' => 7,
-            ],
-            [
-                'name' => 'Maison de l’Édition Islamique',
-                'description_i18n' => [
-                    'fr' => 'Fourniture de livres et fascicules pour les classes.',
-                    'en' => 'Books and booklets for the classrooms.',
-                    'ar' => 'توفير الكتب والكراسات للفصول.',
-                ],
-                'website_url' => 'https://example.com/edition',
-                'logo_url' => '/brand/slide-replay.jpg',
-                'sort_order' => 8,
-            ],
-            [
-                'name' => 'Association des Parents d’Élèves',
-                'description_i18n' => [
-                    'fr' => 'Relais entre les familles et l’administration du centre.',
-                    'en' => 'Link between families and the centre administration.',
-                    'ar' => 'جسر بين الأسر وإدارة المركز.',
-                ],
-                'website_url' => 'https://example.com/ape',
-                'logo_url' => '/brand/slide-quizz.jpg',
-                'sort_order' => 9,
-            ],
-            [
-                'name' => 'Comité des Hadaras Régionales',
-                'description_i18n' => [
-                    'fr' => 'Organisation des grands rassemblements spirituels.',
-                    'en' => 'Organisation of major spiritual gatherings.',
-                    'ar' => 'تنظيم التجمعات الروحية الكبرى.',
-                ],
-                'website_url' => 'https://example.com/hadaras',
-                'logo_url' => '/brand/slide-zawiya-cour.png',
-                'sort_order' => 10,
-            ],
-            [
-                'name' => 'Centre de Formation Arabe',
-                'description_i18n' => [
-                    'fr' => 'Cours d’arabe et échanges pédagogiques avec nos enseignants.',
-                    'en' => 'Arabic courses and teaching exchanges with our teachers.',
-                    'ar' => 'دورات عربية وتبادل تربوي مع معلمينا.',
-                ],
-                'website_url' => 'https://example.com/arabe',
-                'logo_url' => '/brand/slide-zawiya-mihrab.png',
-                'sort_order' => 11,
-            ],
-            [
-                'name' => 'Solidarité Quartier Foire',
-                'description_i18n' => [
-                    'fr' => 'Aide alimentaire et accompagnement social du voisinage.',
-                    'en' => 'Food aid and social support for the neighbourhood.',
-                    'ar' => 'مساعدة غذائية ومرافقة اجتماعية للحي.',
-                ],
-                'website_url' => 'https://example.com/solidarite',
-                'logo_url' => '/brand/intro-lecon.jpg',
-                'sort_order' => 12,
+                'sort_order' => 3,
             ],
         ] as $row) {
             Partner::updateOrCreate(

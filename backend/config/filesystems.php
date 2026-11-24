@@ -16,7 +16,9 @@ return [
         ],
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            // Sur Windows Laragon, public/storage est souvent un vrai dossier
+            // (pas un symlink). On écrit donc là où le web sert les fichiers.
+            'root' => public_path('storage'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,

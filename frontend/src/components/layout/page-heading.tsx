@@ -14,6 +14,8 @@ export function PageHeading({
   lede: string;
   image?: string;
 }) {
+  const remote = image.startsWith("/storage/") || /^https?:\/\//i.test(image);
+
   return (
     <section className="relative isolate overflow-hidden bg-brand-950 text-white">
       <Image
@@ -21,6 +23,7 @@ export function PageHeading({
         alt=""
         fill
         priority
+        unoptimized={remote}
         sizes="100vw"
         className="object-cover object-center"
       />

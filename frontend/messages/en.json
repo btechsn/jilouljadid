@@ -1243,8 +1243,8 @@
     "label": "Navigation",
     "brand": "Jiloul Jadid",
     "quranic": "The New Generation",
-    "footer": "Franco-Anglo-Arabic institute · Dakar",
-    "footerBlurb": "Franco-Anglo-Arabic institute in Dakar. The Quran, the Arabic language, the Islamic sciences and the works of Sheikh Ibrahim Niasse.",
+    "footer": "Youth movement · Dakar",
+    "footerBlurb": "A youth movement founded by Seydina Aliou Cissé, son of Imam Cheikh Tidiane Cissé. Together for the good.",
     "footerUseful": "Useful links",
     "footerOther": "Other links",
     "footerContact": "Contact us",
@@ -1319,6 +1319,37 @@
     }
   },
   "pages": {
+    "accueil": {
+      "introTitle": "The New Generation",
+      "introLede": "This blessed youth movement exists to awaken the young, to purify souls, and to plant in them virtue and sound values.",
+      "introMore": "The aims",
+      "points": [
+        "Founded by Seydina Aliou Cissé, son of Imam Cheikh Tidiane Cissé, may Allah be pleased with him.",
+        "Service, transmission and new generations.",
+        "Together for the good."
+      ],
+      "founderEyebrow": "About",
+      "founderTitle": "Word of the founder",
+      "founderP1": "This blessed youth movement exists to awaken the young, to purify souls, and to plant in them virtue and sound values.",
+      "founderP2": "“Whoever wants to be with me, let him follow my path in his words and in his deeds.”",
+      "founderP3": "“I seek the pleasure of the Lord, so as to uphold His religion and to offer an exemplary model to the new generation.”",
+      "founderName": "Seydina Aliou Cissé",
+      "founderLine": "Son of Imam Cheikh Tidiane Cissé",
+      "aimsTitle": "General aims",
+      "aimsLede": "The general aims of the movement are these.",
+      "aim1Title": "Mutual knowledge and brotherhood",
+      "aim1Text": "To foster mutual knowledge and closeness among peoples, and to strengthen belonging to the great Islamic brotherhood.",
+      "aim2Title": "Heritage and the Shaykh’s path",
+      "aim2Text": "To preserve the Islamic heritage through wisdom and good counsel, holding to the path of the Shaykh, may Allah be pleased with him, and studying his teachings.",
+      "aim3Title": "The age and the unchanging principles",
+      "aim3Text": "To meet the demands of the age while remaining firmly attached to the fundamental principles and the values that do not change.",
+      "aim4Title": "Unity of the Fayda",
+      "aim4Text": "To refuse divisions and conflict among the people of the Fayda, and to work for unity and the joining of the ranks.",
+      "testimonialsTitle": "Testimonials",
+      "testimonialsLede": "What those who walk with the movement say.",
+      "partnersTitle": "Partners",
+      "communiqueLabel": "Communiqué"
+    },
     "prayers": { "lede": "The five daily prayers, and the iqama announced for the mosque." },
     "programs": {
       "eyebrow": "Tracks",
@@ -1493,10 +1524,11 @@
       "points": ["The teacher signs, and states the chain.", "Without a teacher and a signature, there is no ijaza.", "The document remains the teacher's act."]
     },
     "live": {
-      "eyebrow": "Studio",
-      "title": "Live",
-      "lede": "Lessons and prayers broadcast when the centre's studio is open.",
-      "points": ["The live stream opens when the studio is on air.", "Chat accompanies the session in progress.", "Without a broadcast, the page stays quiet."]
+      "eyebrow": "Networks",
+      "title": "Social lives",
+      "lede": "Quick access to our channels and pages. The player shows the live stream as soon as a session starts.",
+      "listTitle": "Upcoming lives",
+      "empty": "No upcoming live sessions for now."
     },
     "replay": {
       "eyebrow": "Archive",
@@ -1520,7 +1552,10 @@
       "eyebrow": "Gallery",
       "title": "Media library",
       "lede": "Photos and videos from the movement’s events: filter by type and search by event name.",
-      "points": ["Public photos and videos of the movement.", "Filter by photos or videos.", "Search by event name."]
+      "points": ["Public photos and videos of the movement.", "Filter by photos or videos.", "Search by event name."],
+      "empty": "No media published yet.",
+      "noMatch": "No media matches this search.",
+      "searchPlaceholder": "Search by event name…"
     },
     "daily": {
       "eyebrow": "Reminder",
@@ -1558,7 +1593,15 @@
         "Choose a section and send a request.",
         "The secretariat accepts or declines.",
         "After acceptance, sign in to chat with members."
-      ]
+      ],
+      "donateEyebrow": "Support",
+      "donateTitle": "Donate",
+      "donateLede": "Support the movement via Stripe, PayPal, Wave or Orange Money.",
+      "sectionsTitle": "Sections",
+      "sidebarEyebrow": "After acceptance",
+      "sidebarTitle": "Chat when signed in",
+      "sidebarLede": "Ask to join a section. Once accepted, sign in to chat with members.",
+      "aboutTitle": "How it works"
     },
     "location": {
       "title": "Location",
@@ -1596,6 +1639,12 @@
       "eyebrow": "Dakar",
       "title": "Contact",
       "lede": "Write to the office of Jiloul Jadid, in Dakar.",
+      "infoTitle": "Contact information",
+      "infoLede": "The office answers enrolment requests, questions about programmes and life at the centre.",
+      "hours": "Monday – Friday, 9:00 AM – 6:00 PM (Dakar)",
+      "formTitle": "Send us a message",
+      "formLede": "Fill in the form and our team will get back to you within 24 hours.",
+      "openMap": "Open map",
       "points": ["Franco-Anglo-Arabic institute.", "Dakar, Senegal.", "The office answers enrolment requests and questions about the centre."]
     }
   }

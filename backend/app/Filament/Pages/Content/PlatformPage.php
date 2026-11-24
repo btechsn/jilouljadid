@@ -161,6 +161,11 @@ abstract class PlatformPage extends Page implements HasForms
         }
 
         $description = match (static::pageId()) {
+            'home' => 'Splash (image, portes) + textes Accueil : À propos, fondateur, objectifs, titres témoignages/partenaires. Les événements « Mis en avant » alimentent le slider ; témoignages et partenaires viennent des menus Communauté.',
+            'live' => 'Page /direct du site : image du lecteur (quand aucun live), titres du bloc « Directs sociaux » et textes de la liste. Les séances live se gèrent dans Direct → Séances en direct ; les icônes YouTube/Facebook/… dans Réseaux sociaux → Comptes sociaux.',
+            'community' => 'Page /communaute du site : bandeau, dons, titres des sections, encadré chat et « Comment ça marche ». Les sections elles-mêmes = menu Sections ; FAQ/discussions = Communauté → FAQ ; dons reçus = Communauté → Dons ; témoignages/partenaires = Accueil.',
+            'media' => 'Page /mediatheque du site : bandeau, titre et textes de recherche/liste vide. Les photos et vidéos se gèrent dans Communauté → Médiathèque (médias publics).',
+            'contact' => 'Page /contact du site : bandeau, titres et textes (coordonnées, horaires, formulaire). Téléphone, e-mail, adresse et carte = Paramètres → Coordonnées. Les messages reçus = Communauté → Messages de contact.',
             'centre' => 'Photo et textes affichés sur la page Centre. Les textes sont préremplis en français, anglais et arabe.',
             'zawiya' => 'Photo du fondateur, textes de la zawiya, introduction des horaires, titre et introduction des khutbas, et les deux textes du calendrier.',
             default => 'Textes affichés sur cette page du site. Ils sont préremplis en français, anglais et arabe.',

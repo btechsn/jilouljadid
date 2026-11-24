@@ -18,8 +18,15 @@ class EventController extends Controller
         $events = MosqueEvent::query()
             ->with(['speaker', 'image'])
             ->publicList()
-            ->limit(24)
-            ->get();
+            ->limit(100)
+            ->get()
+            ->each(fn (MosqueEvent $event) => $event->syncStatusFromDates())
+            ->sortBy([
+                ['is_featured', 'desc'],
+                fn (MosqueEvent $event) => $event->isFinished() ? 1 : 0,
+                ['start_at', 'asc'],
+            ])
+            ->values();
 
         return response()->json([
             'data' => EventResource::collection($events),

@@ -18,7 +18,9 @@ class ArticleSeeder extends Seeder
         $this->call(CategorySeeder::class);
 
         $organizationId = Organization::query()->where('slug', 'nujum-al-huda')->value('id');
-        $author = User::query()->where('email', 'admin@nujumalhuda.com')->first() ?? User::query()->first();
+        $author = User::query()->where('email', 'admin@jilouljadid.com')->first()
+            ?? User::query()->where('email', 'admin@nujumalhuda.com')->first()
+            ?? User::query()->first();
         $categories = ArticleCategory::query()->get()->keyBy('slug');
 
         if (! $author || $categories->isEmpty() || ! $organizationId) {

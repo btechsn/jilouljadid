@@ -30,7 +30,7 @@ class AnnouncementResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-megaphone';
 
-    protected static ?string $navigationGroup = 'Actualités';
+    protected static ?string $navigationGroup = 'Annonces';
 
     protected static ?string $navigationLabel = 'Annonces';
 

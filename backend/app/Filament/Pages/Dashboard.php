@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages;
 
-use App\Filament\Widgets\ActivityChart;
 use App\Filament\Widgets\AttentionStats;
-use App\Filament\Widgets\FinanceChart;
-use App\Filament\Widgets\IncomeChart;
 use App\Filament\Widgets\OverviewStats;
 use App\Filament\Widgets\SpacesBoard;
 use App\Filament\Widgets\SpacesChart;
 use Filament\Pages\Dashboard as BaseDashboard;
 use Illuminate\Contracts\Support\Htmlable;
-use Modules\Core\Support\PanelAccess;
 
 class Dashboard extends BaseDashboard
 {
@@ -27,11 +23,7 @@ class Dashboard extends BaseDashboard
 
     public function getSubheading(): string|Htmlable|null
     {
-        if (!PanelAccess::allows('dashboard_money') && !PanelAccess::allows('dashboard_activity')) {
-            return 'Demandes, réunions et cotisations de votre dahira.';
-        }
-
-        return 'Chiffres, évolutions et points d’attention de l’institut.';
+        return 'Vue d’ensemble du mouvement Jiloul Jadid — événements, sections, directs et communauté.';
     }
 
     public function getColumns(): int|string|array
@@ -46,11 +38,8 @@ class Dashboard extends BaseDashboard
     {
         return [
             OverviewStats::class,
-            FinanceChart::class,
-            ActivityChart::class,
-            IncomeChart::class,
-            SpacesChart::class,
             AttentionStats::class,
+            SpacesChart::class,
             SpacesBoard::class,
         ];
     }

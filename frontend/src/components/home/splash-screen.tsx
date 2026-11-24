@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 import { AppOpen } from "@/components/home/app-open";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
+import { serverApiFetch } from "@/lib/server-api";
 
 const DOORS = [
   { href: "a-propos", key: "about", tone: "solid" },
@@ -15,6 +16,15 @@ const DOORS = [
 export async function SplashScreen({ locale }: { locale: string }) {
   const t = await getTranslations("splash");
   const arabic = locale === "ar";
+  const settings = await serverApiFetch<{ home_image_url?: string | null }>("/settings/public", {
+    timeoutMs: 2500,
+    revalidate: 30,
+    locale,
+  });
+  const heroSrc =
+    typeof settings?.home_image_url === "string" && settings.home_image_url.trim()
+      ? settings.home_image_url
+      : "/brand/intro-lecon.jpg";
 
   return (
     <>
@@ -42,7 +52,7 @@ export async function SplashScreen({ locale }: { locale: string }) {
       </div>
       <main className="nh-home relative min-h-dvh overflow-hidden bg-brand-950 text-white">
       <Image
-        src="/brand/intro-lecon.jpg"
+        src={heroSrc}
         alt=""
         fill
         priority

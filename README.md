@@ -43,6 +43,6 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 
 ## Accès admin (après seed)
 
-- URL : `/institut/administration`
-- Email : `admin@nujumalhuda.com`
+- URL : `/jj/administration`
+- Email : `admin@jilouljadid.com`
 - Mot de passe : `password`

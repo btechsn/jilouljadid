@@ -7,8 +7,11 @@ import { PageHeading } from "@/components/layout/page-heading";
 import { PlaceMap } from "@/components/layout/place-map";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { fetchApiJson } from "@/lib/api-fetch";
+import { toPublicMediaUrl } from "@/lib/media";
 import { fullAddress, mapsDirectionsUrl, mapsSearchUrl, phoneHref } from "@/lib/site-settings";
 import { cn } from "@/lib/utils";
+
+const CONTACT_HERO_FALLBACK = "/brand/slide-centre.jpg";
 
 const FIELD =
   "h-11 w-full rounded-xl border border-black/10 bg-[#f8f9fa] px-3 text-sm text-content outline-none transition placeholder:text-content-secondary/70 focus:border-brand-500 focus:bg-white focus:ring-2 focus:ring-gold-300/50";
@@ -18,6 +21,7 @@ export function ContactBoard() {
   const t = useTranslations("contact");
   const pages = useTranslations("pages.contact");
   const place = useSiteSettings();
+  const heroImage = toPublicMediaUrl(place.contactImageUrl, CONTACT_HERO_FALLBACK);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -70,7 +74,7 @@ export function ContactBoard() {
         eyebrow={pages("eyebrow")}
         title={pages("title")}
         lede={pages("lede")}
-        image="/brand/slide-centre.jpg"
+        image={heroImage}
       />
 
       <section className="relative bg-[#eef1f4] py-10 sm:py-14">
@@ -82,8 +86,8 @@ export function ContactBoard() {
           <div className="overflow-hidden rounded-3xl bg-white shadow-xl shadow-brand-950/5 ring-1 ring-black/5">
             <div className="grid lg:grid-cols-2">
               <div className="border-b border-black/5 p-6 sm:p-8 lg:border-b-0 lg:border-e">
-                <h2 className="font-sans text-2xl font-extrabold text-content">{t("infoTitle")}</h2>
-                <p className="mt-3 max-w-md text-sm leading-relaxed text-content-secondary">{t("infoLede")}</p>
+                <h2 className="font-sans text-2xl font-extrabold text-content">{pages("infoTitle")}</h2>
+                <p className="mt-3 max-w-md text-sm leading-relaxed text-content-secondary">{pages("infoLede")}</p>
 
                 <ul className="mt-8 space-y-5">
                   <li className="flex items-start gap-3">
@@ -119,7 +123,7 @@ export function ContactBoard() {
                     <span className="mt-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-800">
                       <ClockIcon />
                     </span>
-                    <span className="pt-1.5 text-sm font-semibold text-content">{t("hours")}</span>
+                    <span className="pt-1.5 text-sm font-semibold text-content">{pages("hours")}</span>
                   </li>
                 </ul>
 
@@ -136,14 +140,14 @@ export function ContactBoard() {
                     rel="noreferrer"
                     className="block bg-[#f8f9fa] px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wide text-brand-800 hover:bg-brand-50"
                   >
-                    {t("openMap")}
+                    {pages("openMap")}
                   </a>
                 </div>
               </div>
 
               <div className="p-6 sm:p-8">
-                <h2 className="font-sans text-2xl font-extrabold text-content">{t("formTitle")}</h2>
-                <p className="mt-3 text-sm leading-relaxed text-content-secondary">{t("formLede")}</p>
+                <h2 className="font-sans text-2xl font-extrabold text-content">{pages("formTitle")}</h2>
+                <p className="mt-3 text-sm leading-relaxed text-content-secondary">{pages("formLede")}</p>
 
                 {status === "ok" ? (
                   <div className="mt-8 rounded-2xl bg-brand-50 p-5">

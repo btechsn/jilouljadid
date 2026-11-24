@@ -32,15 +32,39 @@ const nextConfig = {
         port: "8000",
         pathname: "/storage/**",
       },
+      {
+        protocol: "http",
+        hostname: "127.0.0.1",
+        pathname: "/storage/**",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        pathname: "/storage/**",
+      },
     ],
   },
 
   env: {
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "https://jilouljadid.com",
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "https://jilouljadid.com/api/v1",
-    NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL || "wss://jilouljadid.com/ws",
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "http://127.0.0.1:3000",
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1",
+    NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL || "ws://127.0.0.1:8080",
     NEXT_PUBLIC_ADMIN_URL:
-      process.env.NEXT_PUBLIC_ADMIN_URL || "https://jilouljadid.com/institut/administration",
+      process.env.NEXT_PUBLIC_ADMIN_URL || "http://127.0.0.1:8000/jj/administration",
+  },
+
+  async rewrites() {
+    const apiOrigin = (process.env.API_PROXY_ORIGIN || "http://127.0.0.1:8000").replace(/\/$/, "");
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${apiOrigin}/api/:path*`,
+      },
+      {
+        source: "/storage/:path*",
+        destination: `${apiOrigin}/storage/:path*`,
+      },
+    ];
   },
 
   async headers() {

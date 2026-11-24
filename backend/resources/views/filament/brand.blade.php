@@ -1,7 +1,7 @@
 <span class="nh-brand">
-    <img class="nh-brand-mark" src="{{ asset('brand/logo.jpeg') }}" alt="">
+    <img class="nh-brand-mark" src="{{ asset('brand/logo-jj.jpg') }}" alt="">
     <span class="nh-brand-copy">
         <strong>Jiloul Jadid</strong>
-        <span>Institut coranique</span>
+        <span>Administration</span>
     </span>
 </span>

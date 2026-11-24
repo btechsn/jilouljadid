@@ -27,17 +27,18 @@ export interface Announcement {
 }
 
 const API_BASES = [
-  process.env.NEXT_PUBLIC_API_URL,
+  "/api/v1",
   "http://127.0.0.1:8000/api/v1",
   "http://localhost:8000/api/v1",
-].filter((base): base is string => Boolean(base));
+  process.env.NEXT_PUBLIC_API_URL,
+].filter((base, index, all): base is string => Boolean(base) && all.indexOf(base) === index);
 
 async function loadAnnouncements(locale: string): Promise<Announcement[]> {
   const token = typeof window === "undefined" ? null : localStorage.getItem("auth_token");
 
   for (const base of API_BASES) {
     try {
-      const response = await fetch(`${base}/announcements`, {
+      const response = await fetch(`${base.replace(/\/$/, "")}/announcements`, {
         headers: {
           Accept: "application/json",
           "Accept-Language": locale,

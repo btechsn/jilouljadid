@@ -8,16 +8,11 @@ use Modules\Core\Models\Organization;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        $this->command->info('🌱 Démarrage du seeding...');
+        $this->command->info('🌱 Seeding Jiloul Jadid...');
 
-        // 1. Créer l'organisation principale
-        $this->command->info('1️⃣  Création de l\'organisation...');
-        
+        $this->command->info('1️⃣  Organisation...');
         $org = Organization::query()->firstOrNew(['slug' => 'nujum-al-huda']);
         $org->type = OrganizationType::CENTER;
         $org->email = 'Jilouljadid1@gmail.com';
@@ -36,52 +31,29 @@ class DatabaseSeeder extends Seeder
         ]);
         $org->save();
 
-        $this->command->info("   ✅ Organisation créée : {$org->name}");
-
-        $this->command->info('2️⃣  Comptes par rôle...');
+        $this->command->info('2️⃣  Admin...');
         $this->call(RoleAccountsSeeder::class);
 
-        // 3. Module Education
-        $this->command->info('3️⃣  Module Education...');
-        $this->call(\Modules\Education\Database\Seeders\ProgramSeeder::class);
-        $this->call(\Modules\Education\Database\Seeders\TeacherSeeder::class);
-        $this->call(\Modules\Education\Database\Seeders\PromotionSeeder::class);
-
-        // 4. Module Mosque
-        $this->command->info('4️⃣  Module Mosque...');
-        $this->call(\Modules\Mosque\Database\Seeders\PrayerTimeSeeder::class);
-        $this->call(\Modules\Mosque\Database\Seeders\KhutbaSeeder::class);
+        $this->command->info('3️⃣  Événements (alignés site)...');
         $this->call(\Modules\Mosque\Database\Seeders\EventSeeder::class);
 
-        // 5. Module News
-        $this->command->info('5️⃣  Module News...');
-        $this->call(\Modules\News\Database\Seeders\CategorySeeder::class);
-        $this->call(\Modules\News\Database\Seeders\ArticleSeeder::class);
-
-        $this->command->info('6️⃣  Annonces...');
+        $this->command->info('4️⃣  Annonces...');
         $this->call(\Modules\Announcements\Database\Seeders\AnnouncementSeeder::class);
 
-        $this->command->info('7️⃣  Module Academics (quiz + attestations)…');
-        $this->call(\Modules\Academics\Database\Seeders\AcademicsSeeder::class);
-
-        $this->command->info('8️⃣  Module Live + Replay…');
+        $this->command->info('5️⃣  Direct + réseaux sociaux...');
         $this->call(\Modules\Live\Database\Seeders\LiveStreamSeeder::class);
-        $this->call(\Modules\Live\Database\Seeders\VodSeeder::class);
         $this->call(\Modules\Live\Database\Seeders\SocialAccountSeeder::class);
 
-        $this->command->info('9️⃣  Module Resources (récitations)…');
-        $this->call(\Modules\Resources\Database\Seeders\ResourcesSeeder::class);
+        $this->command->info('6️⃣  Sections...');
+        $this->call(\Modules\Dahira\Database\Seeders\DahiraSeeder::class);
 
-        $this->command->info('🔟  Module Community + Dahira…');
+        $this->command->info('7️⃣  Communauté (FAQ légère)...');
         $this->call(\Modules\Community\Database\Seeders\CommunitySeeder::class);
 
         $this->command->newLine();
-        $this->command->info('🎉 Seeding terminé avec succès !');
-        $this->command->newLine();
-        $this->command->info('📝 Identifiants de connexion :');
-        $this->command->info("   Email    : admin@nujumalhuda.com");
-        $this->command->info("   Password : password");
-        $this->command->info("   URL Admin: http://localhost:8000/institut/administration");
-        $this->command->newLine();
+        $this->command->info('🎉 Seeding terminé.');
+        $this->command->info('   Email    : admin@jilouljadid.com');
+        $this->command->info('   Password : password');
+        $this->command->info('   URL Admin: /jj/administration');
     }
 }

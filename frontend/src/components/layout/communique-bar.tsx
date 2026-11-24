@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { CSSProperties } from "react";
 
 export type CommuniqueItem = {
   id: string;
@@ -22,6 +23,11 @@ export function CommuniqueBar({
 
   const characters = items.reduce((total, item) => total + item.text.length, 0);
   const durationSeconds = Math.min(180, Math.max(80, Math.round(characters * 0.28)));
+  // Répéter assez de fois pour que la piste dépasse clairement l’écran.
+  const copies = Math.max(1, Math.ceil(80 / Math.max(characters, 1)));
+  const loopItems = Array.from({ length: copies }, (_, copy) =>
+    items.map((item) => ({ ...item, id: `${item.id}__${copy}` })),
+  ).flat();
 
   return (
     <div className="absolute inset-x-0 top-0 z-30 flex max-w-full items-center gap-2 overflow-hidden bg-gradient-to-b from-brand-950/70 to-transparent px-3 pb-6 pt-3 sm:gap-3 sm:px-8">
@@ -35,10 +41,10 @@ export function CommuniqueBar({
         <div
           aria-hidden="true"
           className="nh-marquee-track"
-          style={{ "--nh-marquee-duration": `${durationSeconds}s` } as React.CSSProperties}
+          style={{ "--nh-marquee-duration": `${durationSeconds}s` } as CSSProperties}
         >
-          <CommuniqueRun items={items} />
-          <CommuniqueRun items={items} />
+          <CommuniqueRun items={loopItems} runKey="a" />
+          <CommuniqueRun items={loopItems} runKey="b" />
         </div>
         <ul className="sr-only">
           {items.map((item) => (
@@ -52,14 +58,14 @@ export function CommuniqueBar({
   );
 }
 
-function CommuniqueRun({ items }: { items: CommuniqueItem[] }) {
+function CommuniqueRun({ items, runKey }: { items: CommuniqueItem[]; runKey: string }) {
   return (
     <div className="flex shrink-0 items-center">
       {items.map((item) => {
         const className =
           "whitespace-nowrap px-8 text-sm font-semibold text-white underline-offset-4 transition hover:underline sm:text-base";
         return (
-          <span key={item.id} className="flex items-center">
+          <span key={`${runKey}-${item.id}`} className="flex items-center">
             {item.href ? (
               <Link href={item.href} tabIndex={-1} className={className}>
                 {item.text}

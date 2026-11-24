@@ -1,7 +1,7 @@
 <x-filament-widgets::widget>
     <x-filament::section
         heading="Les espaces"
-        description="Chaque partie de l’institut, avec ses chiffres du moment."
+        description="Chaque partie du mouvement, avec ses chiffres du moment."
     >
         <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             @foreach ($areas as $area)

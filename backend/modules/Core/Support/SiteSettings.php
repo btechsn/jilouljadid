@@ -31,21 +31,21 @@ final class SiteSettings
     public static function fields(): array
     {
         return [
-            'site.address' => self::field('Adresse', 'contact', default: 'Dakar', public: true, span: 'full'),
-            'site.city' => self::field('Ville', 'contact', default: 'Dakar', public: true),
-            'site.phone' => self::field('Téléphone', 'contact', default: '+221 77 452 43 43', public: true),
-            'site.email' => self::field('E-mail de contact', 'contact', default: 'Jilouljadid1@gmail.com', public: true),
-            'site.latitude' => self::field('Latitude', 'contact', type: 'float', default: '14.7437965', public: true),
-            'site.longitude' => self::field('Longitude', 'contact', type: 'float', default: '-17.4674915', public: true),
+            'site.address' => self::field('Adresse', 'contact', default: 'Médina Baye', public: true, span: 'full'),
+            'site.city' => self::field('Ville', 'contact', default: 'Kaolack', public: true),
+            'site.phone' => self::field('Téléphone', 'contact', default: '+221 77 090 90 65', public: true),
+            'site.email' => self::field('E-mail de contact', 'contact', default: 'contact@jilouljadid.com', public: true),
+            'site.latitude' => self::field('Latitude', 'contact', type: 'float', default: '14.1676718', public: true),
+            'site.longitude' => self::field('Longitude', 'contact', type: 'float', default: '-16.0582136', public: true),
             'site.footer_note' => self::field('Note sous l’adresse', 'footer', type: 'text', public: true, span: 'full'),
 
             'footer.logo' => self::field('Logo', 'footer', type: 'image', public: true, span: 'full'),
             'footer.title_fr' => self::field('Titre (français)', 'footer', default: 'Jiloul Jadid', public: true),
             'footer.title_en' => self::field('Titre (anglais)', 'footer', default: 'Jiloul Jadid', public: true),
             'footer.title_ar' => self::field('Titre (arabe)', 'footer', default: 'الجيل الجديد', public: true),
-            'footer.blurb_fr' => self::field('Description (français)', 'footer', type: 'text', default: 'Institut franco-anglo-arabe à Dakar. Le Coran, la langue arabe, les sciences islamiques et les œuvres de Cheikh Ibrahim Niasse.', public: true, span: 'full'),
-            'footer.blurb_en' => self::field('Description (anglais)', 'footer', type: 'text', default: 'Franco-Anglo-Arabic institute in Dakar. The Quran, the Arabic language, the Islamic sciences and the works of Sheikh Ibrahim Niasse.', public: true, span: 'full'),
-            'footer.blurb_ar' => self::field('Description (arabe)', 'footer', type: 'text', default: 'معهد فرنسي إنجليزي عربي في دكار. القرآن واللغة العربية والعلوم الإسلامية ومؤلفات الشيخ إبراهيم نياس.', public: true, span: 'full'),
+            'footer.blurb_fr' => self::field('Description (français)', 'footer', type: 'text', default: 'Mouvement de jeunesse fondé par Seydina Aliou Cissé, fils de l’Imam Cheikh Tidiane Cissé. Ensemble pour le bien.', public: true, span: 'full'),
+            'footer.blurb_en' => self::field('Description (anglais)', 'footer', type: 'text', default: 'A youth movement founded by Seydina Aliou Cissé, son of Imam Cheikh Tidiane Cissé. Together for the good.', public: true, span: 'full'),
+            'footer.blurb_ar' => self::field('Description (arabe)', 'footer', type: 'text', default: 'حركة شبابية أسسها سيدنا علي سيسي، نجل الإمام الشيخ تجاني سيسي. معاً من أجل الخير.', public: true, span: 'full'),
             'footer.useful_title_fr' => self::field('Titre des liens utiles (français)', 'links', default: 'Liens utiles', public: true),
             'footer.useful_title_en' => self::field('Titre des liens utiles (anglais)', 'links', default: 'Useful links', public: true),
             'footer.useful_title_ar' => self::field('Titre des liens utiles (arabe)', 'links', default: 'روابط مفيدة', public: true),
@@ -69,10 +69,10 @@ final class SiteSettings
             'mail.encryption' => self::field('Chiffrement', 'mail', default: 'tls'),
             'mail.username' => self::field('Utilisateur', 'mail'),
             'mail.password' => self::field('Mot de passe', 'mail', secret: true),
-            'mail.from_address' => self::field('Adresse d’expédition', 'mail', default: 'Jilouljadid1@gmail.com'),
+            'mail.from_address' => self::field('Adresse d’expédition', 'mail', default: 'contact@jilouljadid.com'),
             'mail.from_name' => self::field('Nom d’expédition', 'mail', default: 'Jiloul Jadid', span: 'full'),
 
-            'sms.sender_name' => self::field('Nom d’expéditeur', 'sms', default: 'NujumAlHuda'),
+            'sms.sender_name' => self::field('Nom d’expéditeur', 'sms', default: 'JiloulJadid'),
             'sms.sender_address' => self::field('Adresse d’expéditeur', 'sms'),
             'sms.client_id' => self::field('Client ID', 'sms', secret: true),
             'sms.client_secret' => self::field('Client secret', 'sms', secret: true),
@@ -101,23 +101,23 @@ final class SiteSettings
             ],
             'footer' => [
                 'title' => 'Pied de page',
-                'description' => 'Logo, titre et description. Les textes sont préremplis en français, anglais et arabe.',
+                'description' => 'Logo, titre et description de Jiloul Jadid. Les textes sont préremplis en français, anglais et arabe.',
             ],
             'links' => [
                 'title' => 'Liens',
-                'description' => 'Colonnes « Liens utiles » et « Autres liens ». Les textes sont préremplis en français, anglais et arabe.',
+                'description' => 'Colonnes « Liens utiles » et « Autres liens » du pied de page Jiloul Jadid. Les textes sont préremplis en français, anglais et arabe.',
             ],
             'analytics' => [
                 'title' => 'Plausible',
-                'description' => 'Domaine du site suivi par Plausible, par exemple nujumalhuda.com. Laisser vide pour ne rien charger. Aucun script Google n’est utilisé.',
+                'description' => 'Domaine du site suivi par Plausible, par exemple jilouljadid.com. Laisser vide pour ne rien charger. Aucun script Google n’est utilisé.',
             ],
             'mail' => [
                 'title' => 'E-mail',
-                'description' => 'Envoi des messages de l’institut. Un champ secret vide conserve la clé déjà enregistrée.',
+                'description' => 'Envoi des messages de Jiloul Jadid (contact, newsletter, notifications). Un champ secret vide conserve la clé déjà enregistrée.',
             ],
             'sms' => [
                 'title' => 'SMS',
-                'description' => 'Compte Orange SMS utilisé pour les notifications.',
+                'description' => 'Compte Orange SMS utilisé pour les notifications Jiloul Jadid.',
             ],
             'wave' => [
                 'title' => 'Paiement Wave',
@@ -253,8 +253,14 @@ final class SiteSettings
             'newsletter_placeholder' => self::localeTrio('footer.newsletter_placeholder'),
             'newsletter_button' => self::localeTrio('footer.newsletter_button'),
             'page_copy' => PlatformPages::publicCopy(),
+            'home_image_url' => PlatformPages::imageUrl('home'),
             'centre_image_url' => PlatformPages::imageUrl('centre'),
-            'founder_image_url' => PlatformPages::imageUrl('zawiya', 'founder_image'),
+            'founder_image_url' => PlatformPages::imageUrl('home', 'founder_image')
+                ?? PlatformPages::imageUrl('zawiya', 'founder_image'),
+            'live_poster_url' => PlatformPages::imageUrl('live', 'poster'),
+            'community_image_url' => PlatformPages::imageUrl('community', 'image'),
+            'media_image_url' => PlatformPages::imageUrl('media', 'image'),
+            'contact_image_url' => PlatformPages::imageUrl('contact', 'image'),
         ];
     }
 
@@ -436,22 +442,17 @@ final class SiteSettings
     private static function defaultLinks(string $key): array
     {
         $useful = [
-            self::link('/centre', 'Le centre', 'The center', 'المركز'),
-            self::link('/zawiya', 'Zawiya', 'Zawiya', 'الزاوية'),
-            self::link('/mosque/prayer-times', 'Horaires de prière', 'Prayer times', 'مواقيت الصلاة'),
-            self::link('/centre/calendrier', 'Calendrier hégirien', 'Hijri calendar', 'التقويم الهجري'),
-            self::link('/centre/khutbas', 'Khutbas', 'Khutbas', 'الخطب'),
-            self::link('/centre/evenements', 'Événements', 'Events', 'الفعاليات'),
-            self::link('/centre/annonces', 'Annonces', 'Announcements', 'الإعلانات'),
+            self::link('/a-propos', 'Accueil', 'Home', 'الرئيسية'),
+            self::link('/evenements', 'Événements', 'Events', 'الفعاليات'),
+            self::link('/direct', 'En direct', 'Live', 'البث المباشر'),
+            self::link('/communaute', 'Communauté', 'Community', 'المجتمع'),
+            self::link('/mediatheque', 'Médiathèque', 'Media library', 'المكتبة الإعلامية'),
+            self::link('/contact', 'Contact', 'Contact', 'اتصل بنا'),
         ];
 
         $other = [
-            self::link('/programs', 'Programmes', 'Programmes', 'البرامج'),
-            self::link('/teachers', 'Enseignants', 'Teachers', 'المدرّسون'),
-            self::link('/academique/inscription', 'Inscription', 'Enrolment', 'التسجيل'),
-            self::link('/academique/promotions', 'Promotions', 'Cohorts', 'الدفعات'),
-            self::link('/academique/certificats', 'Certificats', 'Certificates', 'الشهادات'),
-            self::link('/academique/ijaza', 'Ijaza', 'Ijaza', 'الإجازة'),
+            self::link('/rejoindre', 'Rejoindre', 'Join', 'الانضمام'),
+            self::link('/soutien', 'Faire un don', 'Donate', 'تبرّع'),
         ];
 
         return $key === 'footer.other_links' ? $other : $useful;

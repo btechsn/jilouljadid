@@ -42,7 +42,7 @@ final class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('institut/administration')
+            ->path('jj/administration')
             ->login(\App\Filament\Pages\Auth\Login::class)
             ->passwordReset()
             ->profile(\App\Filament\Pages\Auth\EditProfile::class, isSimple: false)
@@ -51,14 +51,8 @@ final class AdminPanelProvider extends PanelProvider
                 \App\Filament\Pages\Settings\ContactSettingsPage::class,
                 \App\Filament\Pages\Settings\FooterSettingsPage::class,
                 \App\Filament\Pages\Settings\LinksSettingsPage::class,
-                \App\Filament\Pages\SendNewsletter::class,
-                \App\Filament\Pages\Settings\AnalyticsSettingsPage::class,
-                \App\Filament\Pages\Settings\ModerationSettingsPage::class,
-                \App\Filament\Pages\Settings\OperationsSettingsPage::class,
                 \App\Filament\Pages\Settings\MailSettingsPage::class,
-                \App\Filament\Pages\Settings\SmsSettingsPage::class,
-                \App\Filament\Pages\Settings\WaveSettingsPage::class,
-                \App\Filament\Pages\Settings\OrangeMoneySettingsPage::class,
+                \App\Filament\Pages\SendNewsletter::class,
                 \App\Filament\Pages\ManageSettings::class,
                 ...\Modules\Core\Support\PlatformPages::pageClasses(),
             ])
@@ -72,7 +66,7 @@ final class AdminPanelProvider extends PanelProvider
             ->brandLogo(fn (): HtmlString => new HtmlString(view('filament.brand')->render()))
             ->darkModeBrandLogo(fn (): HtmlString => new HtmlString(view('filament.brand')->render()))
             ->brandLogoHeight('auto')
-            ->favicon(asset('brand/logo.jpeg'))
+            ->favicon(asset('brand/logo-jj.jpg'))
             ->sidebarCollapsibleOnDesktop()
             ->renderHook(
                 PanelsRenderHook::STYLES_AFTER,
@@ -80,7 +74,7 @@ final class AdminPanelProvider extends PanelProvider
                     <style>
                         .fi-logo { width: auto !important; height: auto !important; border-radius: 0; object-fit: unset; }
                         .nh-brand { display: flex; align-items: center; gap: .65rem; min-width: 0; }
-                        .nh-brand-mark { width: 2.5rem; height: 2.5rem; flex: none; border-radius: 999px; object-fit: cover; object-position: center 28%; }
+                        .nh-brand-mark { width: 2.5rem; height: 2.5rem; flex: none; border-radius: 999px; object-fit: cover; object-position: center; }
                         .nh-brand-copy { display: flex; flex-direction: column; line-height: 1.05; min-width: 0; }
                         .nh-brand-copy strong { font-size: .95rem; font-weight: 800; letter-spacing: -.01em; }
                         .nh-brand-copy span { font-size: .68rem; font-weight: 600; opacity: .72; }
@@ -181,9 +175,8 @@ final class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make('Direct')->icon('heroicon-o-video-camera'),
                 NavigationGroup::make('Réseaux sociaux')->icon('heroicon-o-share'),
                 NavigationGroup::make('Communauté')->icon('heroicon-o-chat-bubble-left-right'),
-                NavigationGroup::make('Dahira')->icon('heroicon-o-user-group'),
-                NavigationGroup::make('Actualités')->icon('heroicon-o-newspaper'),
-                NavigationGroup::make('Conformité & RGPD')->icon('heroicon-o-shield-check'),
+                NavigationGroup::make('Sections')->icon('heroicon-o-user-group'),
+                NavigationGroup::make('Annonces')->icon('heroicon-o-megaphone'),
                 NavigationGroup::make('Pages')->icon('heroicon-o-document-text')->collapsible(),
                 NavigationGroup::make('Paramètres')->icon('heroicon-o-cog-6-tooth')->collapsible(),
             ])

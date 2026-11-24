@@ -23,10 +23,14 @@ class CommunityServiceProvider extends ServiceProvider
                 return;
             }
 
-            $panel->discoverResources(
-                in: __DIR__ . '/Filament/Resources',
-                for: 'Modules\\Community\\Filament\\Resources',
-            );
+            $panel->resources([
+                \Modules\Community\Filament\Resources\ContactMessageResource::class,
+                \Modules\Community\Filament\Resources\GalleryItemResource::class,
+                \Modules\Community\Filament\Resources\QuestionResource::class,
+                \Modules\Community\Filament\Resources\PartnerResource::class,
+                \Modules\Community\Filament\Resources\TestimonialResource::class,
+                \Modules\Community\Filament\Resources\DonationResource::class,
+            ]);
         });
     }
 
